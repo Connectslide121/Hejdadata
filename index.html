@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hejda Data - Ta kontroll över din personliga information</title>
+    <meta
+      name="description"
+      content="Begär borttagning av din personliga information från svenska katalogtjänster enligt GDPR"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Global Language Toggle -->
+    <div class="language-toggle">
+      <button id="langSwitch" class="lang-btn"
+        ><i data-lucide="globe"></i> English</button
+      >
+    </div>
+
+    <!-- Landing Page -->
+    <section id="landing" class="landing-page active">
+      <div class="landing-content">
+        <div class="hero-logo">
+          <i data-lucide="shield-check" class="hero-icon"></i>
+        </div>
+        <h1 class="hero-title" data-i18n="hero.title"
+          >Ta kontroll över din personliga information</h1
+        >
+        <p class="hero-subtitle" data-i18n="hero.subtitle"
+          >Begär enkelt borttagning av dina uppgifter från svenska
+          katalogtjänster enligt GDPR. Helt gratis, ingen registrering, inga
+          mellansteg.</p
+        >
+
+        <div class="provider-carousel">
+          <div class="carousel-track" id="carouselTrack">
+            <!-- Populated by JavaScript -->
+          </div>
+        </div>
+
+        <div class="privacy-badge">
+          <i data-lucide="lock" class="privacy-icon"></i>
+          <div>
+            <strong data-i18n="privacy.title">Din integritet först:</strong>
+            <span data-i18n="privacy.message"
+              >All information hanteras endast i din webbläsare. Inget sparas
+              eller skickas till våra servrar.</span
+            >
+          </div>
+        </div>
+
+        <div class="how-it-works-mini">
+          <div class="mini-step">
+            <div class="mini-step-icon">
+              <i data-lucide="user-pen"></i>
+            </div>
+            <h4 data-i18n="howto.step1.title">Fyll i dina uppgifter</h4>
+          </div>
+          <div class="mini-step">
+            <div class="mini-step-icon">
+              <i data-lucide="send"></i>
+            </div>
+            <h4 data-i18n="howto.step2.title">Skicka förfrågningar</h4>
+          </div>
+        </div>
+
+        <button id="startBtn" class="btn-hero">
+          <span data-i18n="actions.start">Kom igång</span>
+          <i data-lucide="arrow-right"></i>
+        </button>
+
+        <div class="scroll-indicator">
+          <i data-lucide="chevron-down"></i>
+        </div>
+      </div>
+    </section>
+
+    <!-- Wizard Container -->
+    <div id="wizardContainer" class="wizard-container">
+      <div class="wizard-track">
+        <!-- Step 1: Your Details -->
+        <section class="wizard-step" data-step="1">
+          <div class="step-header">
+            <div class="step-progress">
+              <span class="step-number">1/2</span>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 50%"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-content">
+            <div class="step-icon-large">
+              <i data-lucide="user-pen"></i>
+            </div>
+            <h2 data-i18n="form.title">Dina uppgifter</h2>
+            <p class="step-description" data-i18n="form.description"
+              >Fyll i dina uppgifter för att skapa personliga
+              GDPR-förfrågningar</p
+            >
+
+            <form id="userForm" class="wizard-form">
+              <div class="form-group">
+                <label for="userName"
+                  ><i data-lucide="user" class="label-icon"></i>
+                  <span data-i18n="form.name">Fullständigt namn *</span></label
+                >
+                <input
+                  type="text"
+                  id="userName"
+                  required
+                  placeholder="Ex: Anna Andersson"
+                />
+              </div>
+              <div class="form-group">
+                <label for="userEmail"
+                  ><i data-lucide="mail" class="label-icon"></i>
+                  <span data-i18n="form.email">E-postadress *</span></label
+                >
+                <input
+                  type="email"
+                  id="userEmail"
+                  required
+                  placeholder="Ex: anna@exempel.se"
+                />
+              </div>
+              <div class="form-group">
+                <label for="userPIN"
+                  ><i data-lucide="credit-card" class="label-icon"></i>
+                  <span data-i18n="form.pin"
+                    >Personnummer (valfritt)</span
+                  ></label
+                >
+                <input
+                  type="text"
+                  id="userPIN"
+                  placeholder="Ex: YYYYMMDD-XXXX"
+                />
+                <small data-i18n="form.pinHelp"
+                  >Kan underlätta identifiering men är inte obligatoriskt</small
+                >
+              </div>
+            </form>
+          </div>
+
+          <div class="step-actions">
+            <button class="btn-secondary" id="backToLanding">
+              <i data-lucide="arrow-left"></i>
+              <span data-i18n="actions.back">Tillbaka</span>
+            </button>
+            <button class="btn-primary" id="nextToEmails" disabled>
+              <span data-i18n="actions.next">Nästa steg</span>
+              <i data-lucide="arrow-right"></i>
+            </button>
+          </div>
+        </section>
+
+        <!-- Step 2: Email Requests -->
+        <section class="wizard-step" data-step="2">
+          <div class="step-header">
+            <div class="step-progress">
+              <span class="step-number">2/2</span>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 100%"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-content">
+            <div class="step-icon-large success">
+              <i data-lucide="check-circle"></i>
+            </div>
+            <h2 data-i18n="emails.title">Dina GDPR-förfrågningar</h2>
+            <p class="step-description" data-i18n="emails.instruction"
+              >Klicka på varje länk nedan för att öppna e-postmeddelandet.
+              Granska innehållet och skicka det från din e-postklient.</p
+            >
+
+            <div id="emailLinks" class="email-links">
+              <!-- Populated by JavaScript -->
+            </div>
+          </div>
+
+          <div class="step-actions">
+            <button class="btn-secondary" id="backToDetails">
+              <i data-lucide="arrow-left"></i>
+              <span data-i18n="actions.back">Tillbaka</span>
+            </button>
+            <button class="btn-primary" id="startOver">
+              <i data-lucide="rotate-ccw"></i>
+              <span data-i18n="actions.startOver">Börja om</span>
+            </button>
+          </div>
+        </section>
+      </div>
+
+      <footer>
+        <div class="footer-content">
+          <p data-i18n="footer.rights"
+            >© 2025 Hejda Data. Alla rättigheter förbehållna.</p
+          >
+          <p data-i18n="footer.disclaimer"
+            >Denna tjänst tillhandahålls som den är. Vi garanterar inte svar
+            eller borttagning från valda tjänster.</p
+          >
+        </div>
+      </footer>
+    </div>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
