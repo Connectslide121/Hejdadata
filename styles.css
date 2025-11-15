@@ -28,7 +28,6 @@ body {
   line-height: 1.6;
   color: var(--text-dark);
   background-color: var(--bg-light);
-  overflow-x: hidden;
 }
 
 /* Landing Page */
