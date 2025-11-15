@@ -429,9 +429,53 @@ function toggleLanguage() {
   currentLang = currentLang === "sv" ? "en" : "sv";
   updateLanguage();
 
-  // Re-render email links if they exist
-  if (emailLinks.innerHTML) {
-    generateEmails();
+  // Re-render email links if they exist and we're on step 2
+  if (emailLinks.innerHTML && currentStep === 2) {
+    const name = userName.value.trim();
+    const email = userEmail.value.trim();
+    const pin = userPIN.value.trim();
+    
+    // Only regenerate if we have the data
+    if (name && email) {
+      const selectedProviders = providers;
+      const template = emailTemplates[currentLang];
+
+      emailLinks.innerHTML = selectedProviders
+        .map((provider) => {
+          const subject = encodeURIComponent(template.subject);
+          const body = encodeURIComponent(template.body(name, email, pin));
+          const mailtoLink = `mailto:${provider.email}?subject=${subject}&body=${body}`;
+
+          const domain = provider.email.split('@')[1];
+          const initial = provider.name.charAt(0).toUpperCase();
+          const logoSrc = provider.logo || `https://logo.clearbit.com/${domain}`;
+          return `
+            <div class="email-link-item">
+                <div class="provider-logo-wrapper">
+                    <img src="${logoSrc}" 
+                         alt="${provider.name}" 
+                         class="provider-logo"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="provider-logo-fallback" style="display:none;">${initial}</div>
+                </div>
+                <div class="email-link-info">
+                    <div class="email-link-name">${provider.name}</div>
+                    <div class="email-link-desc">${provider.desc[currentLang]}</div>
+                </div>
+                <a href="${mailtoLink}" class="email-link-btn">
+                    <i data-lucide="mail"></i>
+                    ${currentLang === "sv" ? "Skicka e-post" : "Send Email"}
+                </a>
+            </div>
+        `;
+        })
+        .join("");
+
+      // Re-initialize Lucide icons for dynamically added content
+      if (typeof lucide !== "undefined") {
+        lucide.createIcons();
+      }
+    }
   }
 }
 
