@@ -2,7 +2,7 @@
 
 A privacy-first web application that helps Swedish residents easily request removal of their personal information from public directory services according to GDPR.
 
-**Live Demo:** [https://connectslide121.github.io/Hejdadata/](https://connectslide121.github.io/Hejdadata/)
+**Visit site:** [https://hejdadata.se](https://hejdadata.se)
 
 ## Features
 
