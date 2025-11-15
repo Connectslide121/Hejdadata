@@ -26,8 +26,8 @@ const translations = {
       title: "Dina uppgifter",
       description:
         "Fyll i dina uppgifter för att skapa personliga GDPR-förfrågningar",
-      name: "Fullständigt namn *",
-      email: "E-postadress *",
+      name: "Fullständigt namn <span class=\"required-asterisk\">*</span>",
+      email: "E-postadress <span class=\"required-asterisk\">*</span>",
       pin: "Personnummer (valfritt)",
       pinHelp: "Kan underlätta identifiering men är inte obligatoriskt",
     },
@@ -80,8 +80,8 @@ const translations = {
     form: {
       title: "Your Information",
       description: "Fill in your details to create personalized GDPR requests",
-      name: "Full Name *",
-      email: "Email Address *",
+      name: "Full Name <span class=\"required-asterisk\">*</span>",
+      email: "Email Address <span class=\"required-asterisk\">*</span>",
       pin: "Personal Identity Number (optional)",
       pinHelp: "May help with identification but is not required",
     },
@@ -498,7 +498,7 @@ function updateLanguage() {
     }
 
     if (value) {
-      element.textContent = value;
+      element.innerHTML = value;
     }
   });
 

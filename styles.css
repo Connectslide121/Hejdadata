@@ -533,6 +533,10 @@ body {
   color: var(--text-dark);
 }
 
+.required-asterisk {
+  color: var(--danger-color);
+}
+
 .label-icon {
   width: 18px;
   height: 18px;
