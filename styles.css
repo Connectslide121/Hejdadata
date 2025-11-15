@@ -28,6 +28,7 @@ body {
   line-height: 1.6;
   color: var(--text-dark);
   background-color: var(--bg-light);
+  overflow-x: hidden;
 }
 
 /* Landing Page */
@@ -420,6 +421,7 @@ body {
   display: flex;
   flex: 1;
   transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
 }
 
 .wizard-step {
