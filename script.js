@@ -46,7 +46,7 @@ const translations = {
     emails: {
       title: "Dina GDPR-förfrågningar",
       instruction:
-        "Klicka på varje länk nedan för att öppna e-postmeddelandet. Granska innehållet och skicka det från din e-postklient.",
+        "För vissa tjänster kan du ta bort dina uppgifter direkt med BankID. För andra öppnar du e-postmeddelandet, granskar innehållet och skickar det från din e-postklient.",
       sendTo: "Skicka till",
     },
     footer: {
@@ -100,7 +100,7 @@ const translations = {
     emails: {
       title: "Your GDPR Requests",
       instruction:
-        "Click on each link below to open the email. Review the content and send it from your email client.",
+        "For some services you can remove your data directly with BankID. For others, click to open the email, review the content and send it from your email client.",
       sendTo: "Send to",
     },
     footer: {
@@ -118,6 +118,8 @@ const providers = [
     name: "MrKoll",
     email: "support@mrkoll.se",
     logo: "assets/MrKoll.png",
+    removalMethod: "bankid",
+    directLink: "https://mrkoll.se/om/andra-uppgifter",
     desc: {
       sv: "Personinformation och bakgrundskontroller",
       en: "Personal information and background checks",
@@ -127,6 +129,8 @@ const providers = [
     id: "ratsit",
     name: "Ratsit",
     email: "kundservice@ratsit.se",
+    removalMethod: "bankid",
+    directLink: "https://www.ratsit.se/redigera/dolj",
     desc: {
       sv: "Omfattande personuppgifter och ekonomisk information",
       en: "Comprehensive personal data and financial information",
@@ -136,6 +140,8 @@ const providers = [
     id: "hitta",
     name: "Hitta",
     email: "kundservice@hitta.se",
+    removalMethod: "bankid",
+    directLink: "https://www.hitta.se/kontakta-oss/ta-bort-kontaktsida",
     desc: {
       sv: "Person- och företagssökning, karttjänster",
       en: "Person and business search, map services",
@@ -145,6 +151,8 @@ const providers = [
     id: "eniro",
     name: "Eniro",
     email: "uppdatera.eniro@eniro.com",
+    removalMethod: "bankid",
+    directLink: "https://uppdatera.eniro.se/person",
     desc: {
       sv: "Katalogtjänst med person- och företagsinformation",
       en: "Directory service with personal and business information",
@@ -164,6 +172,8 @@ const providers = [
     name: "Upplysning",
     email: "kundservice@upplysning.se",
     logo: "assets/upplysning.png",
+    removalMethod: "webform",
+    directLink: "https://www.upplysning.se/kontakta-oss",
     desc: {
       sv: "Telefonkatalog och adressuppgifter",
       en: "Phone directory and address information",
@@ -192,6 +202,8 @@ const providers = [
     id: "lexbase",
     name: "Lexbase",
     email: "info@lexbase.se",
+    removalMethod: "webform",
+    directLink: "https://www.lexbase.se/kontakta-oss",
     desc: {
       sv: "Juridisk information och företagsdata",
       en: "Legal information and company data",
@@ -386,14 +398,69 @@ function generateEmails() {
 
   emailLinks.innerHTML = selectedProviders
     .map((provider) => {
-      const subject = encodeURIComponent(template.subject);
-      const body = encodeURIComponent(template.body(name, email, pin));
-      const mailtoLink = `mailto:${provider.email}?subject=${subject}&body=${body}`;
-
       const domain = provider.email.split("@")[1];
       const initial = provider.name.charAt(0).toUpperCase();
       const logoSrc = provider.logo || `https://logo.clearbit.com/${domain}`;
-      return `
+
+      // Check if provider uses direct link or email
+      if (provider.removalMethod === "bankid") {
+        return `
+            <div class="email-link-item">
+                <div class="provider-logo-wrapper">
+                    <img src="${logoSrc}" 
+                         alt="${provider.name}" 
+                         class="provider-logo"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="provider-logo-fallback" style="display:none;">${initial}</div>
+                </div>
+                <div class="email-link-info">
+                    <div class="email-link-name">${provider.name}</div>
+                    <div class="email-link-desc">${
+                      provider.desc[currentLang]
+                    }</div>
+                </div>
+                <a href="${
+                  provider.directLink
+                }" target="_blank" rel="noopener noreferrer" class="email-link-btn bankid-btn">
+                    <i data-lucide="shield-check"></i>
+                    ${
+                      currentLang === "sv"
+                        ? "Ta bort med BankID"
+                        : "Remove with BankID"
+                    }
+                </a>
+            </div>
+        `;
+      } else if (provider.removalMethod === "webform") {
+        return `
+            <div class="email-link-item">
+                <div class="provider-logo-wrapper">
+                    <img src="${logoSrc}" 
+                         alt="${provider.name}" 
+                         class="provider-logo"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="provider-logo-fallback" style="display:none;">${initial}</div>
+                </div>
+                <div class="email-link-info">
+                    <div class="email-link-name">${provider.name}</div>
+                    <div class="email-link-desc">${
+                      provider.desc[currentLang]
+                    }</div>
+                </div>
+                <a href="${
+                  provider.directLink
+                }" target="_blank" rel="noopener noreferrer" class="email-link-btn webform-btn">
+                    <i data-lucide="external-link"></i>
+                    ${currentLang === "sv" ? "Öppna formulär" : "Open Form"}
+                </a>
+            </div>
+        `;
+      } else {
+        const subject = encodeURIComponent(template.subject);
+        const body = encodeURIComponent(template.body(name, email, pin));
+        const mailtoLink = `mailto:${provider.email}?subject=${subject}&body=${body}`;
+
+        return `
             <div class="email-link-item">
                 <div class="provider-logo-wrapper">
                     <img src="${logoSrc}" 
@@ -414,6 +481,7 @@ function generateEmails() {
                 </a>
             </div>
         `;
+      }
     })
     .join("");
 
@@ -444,15 +512,70 @@ function toggleLanguage() {
 
       emailLinks.innerHTML = selectedProviders
         .map((provider) => {
-          const subject = encodeURIComponent(template.subject);
-          const body = encodeURIComponent(template.body(name, email, pin));
-          const mailtoLink = `mailto:${provider.email}?subject=${subject}&body=${body}`;
-
           const domain = provider.email.split("@")[1];
           const initial = provider.name.charAt(0).toUpperCase();
           const logoSrc =
             provider.logo || `https://logo.clearbit.com/${domain}`;
-          return `
+
+          // Check if provider uses direct link or email
+          if (provider.removalMethod === "bankid") {
+            return `
+            <div class="email-link-item">
+                <div class="provider-logo-wrapper">
+                    <img src="${logoSrc}" 
+                         alt="${provider.name}" 
+                         class="provider-logo"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="provider-logo-fallback" style="display:none;">${initial}</div>
+                </div>
+                <div class="email-link-info">
+                    <div class="email-link-name">${provider.name}</div>
+                    <div class="email-link-desc">${
+                      provider.desc[currentLang]
+                    }</div>
+                </div>
+                <a href="${
+                  provider.directLink
+                }" target="_blank" rel="noopener noreferrer" class="email-link-btn bankid-btn">
+                    <i data-lucide="shield-check"></i>
+                    ${
+                      currentLang === "sv"
+                        ? "Ta bort med BankID"
+                        : "Remove with BankID"
+                    }
+                </a>
+            </div>
+        `;
+          } else if (provider.removalMethod === "webform") {
+            return `
+            <div class="email-link-item">
+                <div class="provider-logo-wrapper">
+                    <img src="${logoSrc}" 
+                         alt="${provider.name}" 
+                         class="provider-logo"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="provider-logo-fallback" style="display:none;">${initial}</div>
+                </div>
+                <div class="email-link-info">
+                    <div class="email-link-name">${provider.name}</div>
+                    <div class="email-link-desc">${
+                      provider.desc[currentLang]
+                    }</div>
+                </div>
+                <a href="${
+                  provider.directLink
+                }" target="_blank" rel="noopener noreferrer" class="email-link-btn webform-btn">
+                    <i data-lucide="external-link"></i>
+                    ${currentLang === "sv" ? "Öppna formulär" : "Open Form"}
+                </a>
+            </div>
+        `;
+          } else {
+            const subject = encodeURIComponent(template.subject);
+            const body = encodeURIComponent(template.body(name, email, pin));
+            const mailtoLink = `mailto:${provider.email}?subject=${subject}&body=${body}`;
+
+            return `
             <div class="email-link-item">
                 <div class="provider-logo-wrapper">
                     <img src="${logoSrc}" 
@@ -473,6 +596,7 @@ function toggleLanguage() {
                 </a>
             </div>
         `;
+          }
         })
         .join("");
 
