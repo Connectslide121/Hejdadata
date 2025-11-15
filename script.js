@@ -434,7 +434,7 @@ function toggleLanguage() {
     const name = userName.value.trim();
     const email = userEmail.value.trim();
     const pin = userPIN.value.trim();
-    
+
     // Only regenerate if we have the data
     if (name && email) {
       const selectedProviders = providers;
@@ -446,9 +446,10 @@ function toggleLanguage() {
           const body = encodeURIComponent(template.body(name, email, pin));
           const mailtoLink = `mailto:${provider.email}?subject=${subject}&body=${body}`;
 
-          const domain = provider.email.split('@')[1];
+          const domain = provider.email.split("@")[1];
           const initial = provider.name.charAt(0).toUpperCase();
-          const logoSrc = provider.logo || `https://logo.clearbit.com/${domain}`;
+          const logoSrc =
+            provider.logo || `https://logo.clearbit.com/${domain}`;
           return `
             <div class="email-link-item">
                 <div class="provider-logo-wrapper">
@@ -460,7 +461,9 @@ function toggleLanguage() {
                 </div>
                 <div class="email-link-info">
                     <div class="email-link-name">${provider.name}</div>
-                    <div class="email-link-desc">${provider.desc[currentLang]}</div>
+                    <div class="email-link-desc">${
+                      provider.desc[currentLang]
+                    }</div>
                 </div>
                 <a href="${mailtoLink}" class="email-link-btn">
                     <i data-lucide="mail"></i>
