@@ -763,15 +763,19 @@ body {
   background-color: var(--primary-color);
   color: white;
   border: none;
-  padding: 0.75rem 1.5rem;
+  padding: 0.5rem 1rem;
   border-radius: var(--radius);
   cursor: pointer;
   font-weight: 600;
+  font-size: 0.9rem;
   text-decoration: none;
   transition: all 0.2s;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
+  min-width: 180px;
+  white-space: nowrap;
 }
 
 .email-link-btn svg {
@@ -783,6 +787,24 @@ body {
   background-color: var(--primary-hover);
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
+}
+
+.bankid-btn {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.bankid-btn:hover {
+  background-color: var(--accent-hover);
+}
+
+.webform-btn {
+  background-color: #8b5cf6;
+  color: white;
+}
+
+.webform-btn:hover {
+  background-color: #7c3aed;
 }
 
 .step-actions {
