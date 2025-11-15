@@ -29,7 +29,8 @@ These instructions guide AI coding agents working on this repo.
   - Clicking `#langSwitch` calls `toggleLanguage()`, which updates `document.documentElement.lang`, re-renders all `[data-i18n]` elements from `translations`, updates placeholders, and reruns `lucide.createIcons()`.
   - When on Step 2, toggling language regenerates the email list using the same user inputs but the other language’s `emailTemplates` and `providers[*].desc[currentLang]`.
 - **Wizard navigation**:
-  - `navigateToStep(step)` controls `currentStep`, hides/shows the landing section, and moves `.wizard-track` using `transform: translateX(...)` in viewport widths.
+  - `navigateToStep(step)` controls `currentStep` and moves `.wizard-track` using `transform: translateX(...)` in viewport widths.
+  - The landing hero remains visible at all times; navigation uses `scrollIntoView()` to move the view to the wizard when the user advances. This preserves the landing area and allows users to scroll back up at any time.
   - Step numbers and progress bars are static in `index.html`; changing the number of steps requires updating HTML, CSS, and navigation logic together.
 - **Form validation**:
   - `validateStep1()` enables `#nextToEmails` only when `userName` and `userEmail` are non-empty and `userEmail.checkValidity()` is true.

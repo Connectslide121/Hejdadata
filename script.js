@@ -26,8 +26,8 @@ const translations = {
       title: "Dina uppgifter",
       description:
         "Fyll i dina uppgifter för att skapa personliga GDPR-förfrågningar",
-      name: "Fullständigt namn <span class=\"required-asterisk\">*</span>",
-      email: "E-postadress <span class=\"required-asterisk\">*</span>",
+      name: 'Fullständigt namn <span class="required-asterisk">*</span>',
+      email: 'E-postadress <span class="required-asterisk">*</span>',
       pin: "Personnummer (valfritt)",
       pinHelp: "Kan underlätta identifiering men är inte obligatoriskt",
     },
@@ -80,8 +80,8 @@ const translations = {
     form: {
       title: "Your Information",
       description: "Fill in your details to create personalized GDPR requests",
-      name: "Full Name <span class=\"required-asterisk\">*</span>",
-      email: "Email Address <span class=\"required-asterisk\">*</span>",
+      name: 'Full Name <span class="required-asterisk">*</span>',
+      email: 'Email Address <span class="required-asterisk">*</span>',
       pin: "Personal Identity Number (optional)",
       pinHelp: "May help with identification but is not required",
     },
@@ -267,6 +267,7 @@ const emailLinks = document.getElementById("emailLinks");
 // Wizard navigation
 const wizardTrack = document.querySelector(".wizard-track");
 const landingPage = document.getElementById("landing");
+const wizardContainer = document.getElementById("wizardContainer");
 const backToLanding = document.getElementById("backToLanding");
 const nextToEmails = document.getElementById("nextToEmails");
 const backToDetails = document.getElementById("backToDetails");
@@ -334,15 +335,16 @@ function setupEventListeners() {
 function navigateToStep(step) {
   currentStep = step;
 
+  // Move the wizard track horizontally to the requested step
+  const offset = step === 0 ? 0 : (step - 1) * -100;
+  wizardTrack.style.transform = `translateX(${offset}vw)`;
+
+  // Scroll to the appropriate area rather than hiding the landing page
+  // so users can always scroll back up to the hero.
   if (step === 0) {
-    // Show landing page
-    landingPage.style.display = "flex";
-    wizardTrack.style.transform = "translateX(0)";
-  } else {
-    // Hide landing page and show wizard
-    landingPage.style.display = "none";
-    const offset = (step - 1) * -100;
-    wizardTrack.style.transform = `translateX(${offset}vw)`;
+    landingPage.scrollIntoView({ behavior: "smooth" });
+  } else if (wizardContainer) {
+    wizardContainer.scrollIntoView({ behavior: "smooth" });
   }
 
   // Re-initialize Lucide icons
@@ -434,7 +436,7 @@ function toggleLanguage() {
     const name = userName.value.trim();
     const email = userEmail.value.trim();
     const pin = userPIN.value.trim();
-    
+
     // Only regenerate if we have the data
     if (name && email) {
       const selectedProviders = providers;
@@ -446,9 +448,10 @@ function toggleLanguage() {
           const body = encodeURIComponent(template.body(name, email, pin));
           const mailtoLink = `mailto:${provider.email}?subject=${subject}&body=${body}`;
 
-          const domain = provider.email.split('@')[1];
+          const domain = provider.email.split("@")[1];
           const initial = provider.name.charAt(0).toUpperCase();
-          const logoSrc = provider.logo || `https://logo.clearbit.com/${domain}`;
+          const logoSrc =
+            provider.logo || `https://logo.clearbit.com/${domain}`;
           return `
             <div class="email-link-item">
                 <div class="provider-logo-wrapper">
@@ -460,7 +463,9 @@ function toggleLanguage() {
                 </div>
                 <div class="email-link-info">
                     <div class="email-link-name">${provider.name}</div>
-                    <div class="email-link-desc">${provider.desc[currentLang]}</div>
+                    <div class="email-link-desc">${
+                      provider.desc[currentLang]
+                    }</div>
                 </div>
                 <a href="${mailtoLink}" class="email-link-btn">
                     <i data-lucide="mail"></i>
