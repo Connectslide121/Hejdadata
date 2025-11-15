@@ -909,6 +909,11 @@ body {
     width: 100%;
     justify-content: center;
   }
+
+  /* Hide "Get Started" hero button on small screens for simplified mobile UX */
+  #startBtn {
+    display: none;
+  }
 }
 
 /* Footer */
