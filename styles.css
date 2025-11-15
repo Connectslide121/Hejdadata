@@ -161,12 +161,13 @@ body {
 }
 
 .hero-icon {
-  width: 100px;
-  height: 100px;
-  stroke-width: 1.5;
-  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.4));
+  width: 150px;
+  height: 150px;
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.4)) brightness(0)
+    saturate(100%) invert(68%) sepia(43%) saturate(989%) hue-rotate(191deg)
+    brightness(101%) contrast(96%);
   animation: float 3s ease-in-out infinite;
-  color: #60a5fa;
+  /* Color tinted to #60a5fa (blue) */
 }
 
 @keyframes float {
@@ -191,6 +192,15 @@ body {
 }
 
 .hero-subtitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  opacity: 0.95;
+  max-width: 700px;
+  margin: 0 auto 1rem;
+  line-height: 1.4;
+}
+
+.hero-description {
   font-size: 1.15rem;
   opacity: 0.9;
   max-width: 700px;

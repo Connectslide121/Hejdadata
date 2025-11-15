@@ -3,12 +3,91 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Primary Meta Tags -->
     <title>Hejda Data - Ta kontroll över din personliga information</title>
     <meta
       name="description"
-      content="Begär borttagning av din personliga information från svenska katalogtjänster enligt GDPR"
+      content="Begär enkelt borttagning av din personliga information från svenska katalogtjänster enligt GDPR. Helt gratis, ingen registrering, inga mellansteg. Skydda din integritet idag."
     />
+    <meta
+      name="keywords"
+      content="GDPR, personuppgifter, borttagning, integritet, dataskydd, svenska katalogtjänster, eniro, hitta.se, ratsit, artikel 17, rätten att bli glömd, personal data, deletion, privacy, data protection, right to be forgotten, article 17, Swedish directory services"
+    />
+    <meta name="author" content="Hejda Data" />
+    <link rel="canonical" href="https://connectslide121.github.io/Hejdadata/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://connectslide121.github.io/Hejdadata/"
+    />
+    <meta
+      property="og:title"
+      content="Hejda Data - Ta kontroll över din personliga information"
+    />
+    <meta
+      property="og:description"
+      content="Begär enkelt borttagning av din personliga information från svenska katalogtjänster enligt GDPR. Helt gratis och säkert."
+    />
+    <meta
+      property="og:image"
+      content="https://connectslide121.github.io/Hejdadata/assets/HD_logo.png"
+    />
+    <meta property="og:locale" content="sv_SE" />
+    <meta property="og:locale:alternate" content="en_US" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta
+      property="twitter:url"
+      content="https://connectslide121.github.io/Hejdadata/"
+    />
+    <meta
+      property="twitter:title"
+      content="Hejda Data - Ta kontroll över din personliga information"
+    />
+    <meta
+      property="twitter:description"
+      content="Begär enkelt borttagning av din personliga information från svenska katalogtjänster enligt GDPR. Helt gratis och säkert."
+    />
+    <meta
+      property="twitter:image"
+      content="https://connectslide121.github.io/Hejdadata/assets/HD_logo.png"
+    />
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#1e293b" />
+
+    <link rel="icon" type="image/png" href="assets/HD_logo.png" />
     <link rel="stylesheet" href="styles.css" />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Hejda Data",
+        "url": "https://connectslide121.github.io/Hejdadata/",
+        "description": "Begär enkelt borttagning av din personliga information från svenska katalogtjänster enligt GDPR",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Web Browser",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "SEK"
+        },
+        "featureList": [
+          "GDPR-förfrågningar",
+          "Borttagning av personuppgifter",
+          "Begränsning av behandling",
+          "Ingen registrering krävs",
+          "100% gratis"
+        ],
+        "inLanguage": ["sv", "en"]
+      }
+    </script>
   </head>
   <body>
     <!-- Global Language Toggle -->
@@ -22,12 +101,10 @@
     <section id="landing" class="landing-page active">
       <div class="landing-content">
         <div class="hero-logo">
-          <i data-lucide="shield-check" class="hero-icon"></i>
+          <img src="assets/HD_logo.png" alt="Hejda Data" class="hero-icon" />
         </div>
-        <h1 class="hero-title" data-i18n="hero.title"
-          >Ta kontroll över din personliga information</h1
-        >
-        <p class="hero-subtitle" data-i18n="hero.subtitle"
+        <h1 class="hero-title">Hejda Data</h1>
+        <p class="hero-description" data-i18n="hero.subtitle"
           >Begär enkelt borttagning av dina uppgifter från svenska
           katalogtjänster enligt GDPR. Helt gratis, ingen registrering, inga
           mellansteg.</p
@@ -104,7 +181,10 @@
               <div class="form-group">
                 <label for="userName"
                   ><i data-lucide="user" class="label-icon"></i>
-                  <span data-i18n="form.name">Fullständigt namn <span class="required-asterisk">*</span></span></label
+                  <span data-i18n="form.name"
+                    >Fullständigt namn
+                    <span class="required-asterisk">*</span></span
+                  ></label
                 >
                 <input
                   type="text"
@@ -116,7 +196,9 @@
               <div class="form-group">
                 <label for="userEmail"
                   ><i data-lucide="mail" class="label-icon"></i>
-                  <span data-i18n="form.email">E-postadress <span class="required-asterisk">*</span></span></label
+                  <span data-i18n="form.email"
+                    >E-postadress <span class="required-asterisk">*</span></span
+                  ></label
                 >
                 <input
                   type="email"
