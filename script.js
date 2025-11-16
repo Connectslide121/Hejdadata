@@ -42,6 +42,9 @@ const translations = {
       back: "Tillbaka",
       generate: "Generera förfrågningar",
       startOver: "Börja om",
+      edit: "Redigera",
+      save: "Spara",
+      cancel: "Avbryt",
     },
     emails: {
       title: "Dina GDPR-förfrågningar",
@@ -96,6 +99,9 @@ const translations = {
       back: "Back",
       generate: "Generate Requests",
       startOver: "Start Over",
+      edit: "Edit",
+      save: "Save",
+      cancel: "Cancel",
     },
     emails: {
       title: "Your GDPR Requests",
@@ -265,37 +271,63 @@ ${name}`,
 
 // State
 let currentLang = "sv";
-let currentStep = 0; // 0 = landing, 1-3 = wizard steps
+let userData = null; // Store user data in memory: { name, email, pin }
+let pendingAction = null; // Store pending action when modal is needed
 
 // DOM Elements
 const langSwitch = document.getElementById("langSwitch");
-const startBtn = document.getElementById("startBtn");
+const scrollIndicator = document.getElementById("scrollIndicator");
 const userForm = document.getElementById("userForm");
 const userName = document.getElementById("userName");
 const userEmail = document.getElementById("userEmail");
 const userPIN = document.getElementById("userPIN");
 const emailLinks = document.getElementById("emailLinks");
 
-// Wizard navigation
-const wizardTrack = document.querySelector(".wizard-track");
+// Main container and modal
 const landingPage = document.getElementById("landing");
-const wizardContainer = document.getElementById("wizardContainer");
-const backToLanding = document.getElementById("backToLanding");
-const nextToEmails = document.getElementById("nextToEmails");
-const backToDetails = document.getElementById("backToDetails");
-const startOver = document.getElementById("startOver");
+const mainContainer = document.getElementById("mainContainer");
+const userModal = document.getElementById("userModal");
+const cancelModal = document.getElementById("cancelModal");
+const saveUserInfo = document.getElementById("saveUserInfo");
+const userInfoDisplay = document.getElementById("userInfoDisplay");
+const editUserInfo = document.getElementById("editUserInfo");
+const displayName = document.getElementById("displayName");
+const displayEmail = document.getElementById("displayEmail");
+const displayPIN = document.getElementById("displayPIN");
 
 // Initialize
 function init() {
-  renderProviders();
   renderCarousel();
   setupEventListeners();
   updateLanguage();
+  generateProviderLinks();
 }
 
-// Render providers (not displayed, just used for email generation)
-function renderProviders() {
-  // Providers are now handled internally, no UI needed
+// Setup event listeners
+function setupEventListeners() {
+  langSwitch.addEventListener("click", toggleLanguage);
+
+  // Landing page - scroll to main content via bouncing indicator
+  if (scrollIndicator) {
+    scrollIndicator.addEventListener("click", () => {
+      mainContainer.scrollIntoView({ behavior: "smooth" });
+    });
+  }
+
+  // Modal handling
+  cancelModal.addEventListener("click", closeModal);
+  saveUserInfo.addEventListener("click", handleSaveUserInfo);
+  editUserInfo.addEventListener("click", openModalForEdit);
+
+  // Close modal on outside click
+  userModal.addEventListener("click", (e) => {
+    if (e.target === userModal) {
+      closeModal();
+    }
+  });
+
+  // Form validation
+  userForm.addEventListener("input", validateForm);
 }
 
 // Render carousel on landing page
@@ -328,75 +360,136 @@ function renderCarousel() {
 function setupEventListeners() {
   langSwitch.addEventListener("click", toggleLanguage);
 
-  // Landing page
-  startBtn.addEventListener("click", () => navigateToStep(1));
-
-  // Step 1 navigation
-  backToLanding.addEventListener("click", () => navigateToStep(0));
-  nextToEmails.addEventListener("click", generateEmails);
-
-  // Step 2 navigation
-  backToDetails.addEventListener("click", () => navigateToStep(1));
-  startOver.addEventListener("click", resetWizard);
-
-  // Form validation
-  userForm.addEventListener("input", validateStep1);
-}
-
-// Navigate between steps
-function navigateToStep(step) {
-  currentStep = step;
-
-  // Move the wizard track horizontally to the requested step
-  const offset = step === 0 ? 0 : (step - 1) * -100;
-  wizardTrack.style.transform = `translateX(${offset}vw)`;
-
-  // Scroll to the appropriate area rather than hiding the landing page
-  // so users can always scroll back up to the hero.
-  if (step === 0) {
-    landingPage.scrollIntoView({ behavior: "smooth" });
-  } else if (wizardContainer) {
-    wizardContainer.scrollIntoView({ behavior: "smooth" });
+  // Landing page - scroll to main content via bouncing indicator
+  if (scrollIndicator) {
+    scrollIndicator.addEventListener("click", () => {
+      mainContainer.scrollIntoView({ behavior: "smooth" });
+    });
   }
 
-  // Re-initialize Lucide icons
+  // Modal handling
+  cancelModal.addEventListener("click", closeModal);
+  saveUserInfo.addEventListener("click", handleSaveUserInfo);
+  editUserInfo.addEventListener("click", openModalForEdit);
+
+  // Close modal on outside click
+  userModal.addEventListener("click", (e) => {
+    if (e.target === userModal) {
+      closeModal();
+    }
+  });
+
+  // Form validation
+  userForm.addEventListener("input", validateForm);
+}
+
+// Modal functions
+function openModal(action = null) {
+  pendingAction = action;
+  userModal.classList.add("show");
+  document.body.style.overflow = "hidden";
+
+  // Re-initialize icons in modal
   if (typeof lucide !== "undefined") {
     lucide.createIcons();
   }
 }
 
-// Validate Step 1
-function validateStep1() {
-  const isValid =
-    userName.value.trim() &&
-    userEmail.value.trim() &&
-    userEmail.checkValidity();
-  nextToEmails.disabled = !isValid;
+function closeModal() {
+  userModal.classList.remove("show");
+  document.body.style.overflow = "";
+  pendingAction = null;
 }
 
-// Reset wizard
-function resetWizard() {
-  userName.value = "";
-  userEmail.value = "";
-  userPIN.value = "";
-
-  emailLinks.innerHTML = "";
-
-  navigateToStep(0);
+function openModalForEdit() {
+  // Populate form with existing data
+  if (userData) {
+    userName.value = userData.name;
+    userEmail.value = userData.email;
+    userPIN.value = userData.pin || "";
+    validateForm();
+  }
+  openModal();
 }
 
-// Generate emails
-function generateEmails() {
+function handleSaveUserInfo() {
   const name = userName.value.trim();
   const email = userEmail.value.trim();
   const pin = userPIN.value.trim();
 
-  // Use all providers automatically
-  const selectedProviders = providers;
+  // Save user data
+  userData = { name, email, pin };
 
+  // Update display
+  updateUserInfoDisplay();
+
+  // Close modal
+  closeModal();
+
+  // If there was a pending action, execute it
+  if (pendingAction) {
+    executePendingAction();
+  } else {
+    // Regenerate all links with new user data
+    generateProviderLinks();
+  }
+}
+
+function updateUserInfoDisplay() {
+  if (userData) {
+    displayName.textContent = userData.name;
+    displayEmail.textContent = userData.email;
+    if (userData.pin) {
+      displayPIN.textContent =
+        currentLang === "sv"
+          ? `Personnummer: ${userData.pin}`
+          : `Personal ID: ${userData.pin}`;
+      displayPIN.style.display = "block";
+    } else {
+      displayPIN.style.display = "none";
+    }
+    userInfoDisplay.style.display = "flex";
+
+    // Re-initialize icons
+    if (typeof lucide !== "undefined") {
+      lucide.createIcons();
+    }
+  } else {
+    userInfoDisplay.style.display = "none";
+  }
+}
+
+function executePendingAction() {
+  if (pendingAction && pendingAction.type === "email") {
+    // Generate email with user data
+    const template = emailTemplates[currentLang];
+    const subject = encodeURIComponent(template.subject);
+    const body = encodeURIComponent(
+      template.body(userData.name, userData.email, userData.pin)
+    );
+    const mailtoLink = `mailto:${pendingAction.provider.email}?subject=${subject}&body=${body}`;
+
+    // Open email client
+    window.location.href = mailtoLink;
+  }
+
+  pendingAction = null;
+}
+
+// Validate form
+function validateForm() {
+  const isValid =
+    userName.value.trim() &&
+    userEmail.value.trim() &&
+    userEmail.checkValidity();
+  saveUserInfo.disabled = !isValid;
+}
+
+// Generate provider links
+function generateProviderLinks() {
   const template = emailTemplates[currentLang];
 
-  emailLinks.innerHTML = selectedProviders
+  emailLinks.innerHTML = providers
     .map((provider) => {
       const domain = provider.email.split("@")[1];
       const initial = provider.name.charAt(0).toUpperCase();
@@ -456,10 +549,7 @@ function generateEmails() {
             </div>
         `;
       } else {
-        const subject = encodeURIComponent(template.subject);
-        const body = encodeURIComponent(template.body(name, email, pin));
-        const mailtoLink = `mailto:${provider.email}?subject=${subject}&body=${body}`;
-
+        // Email action - needs user data
         return `
             <div class="email-link-item">
                 <div class="provider-logo-wrapper">
@@ -475,22 +565,50 @@ function generateEmails() {
                       provider.desc[currentLang]
                     }</div>
                 </div>
-                <a href="${mailtoLink}" class="email-link-btn">
+                <button class="email-link-btn" data-provider-id="${
+                  provider.id
+                }">
                     <i data-lucide="mail"></i>
                     ${currentLang === "sv" ? "Skicka e-post" : "Send Email"}
-                </a>
+                </button>
             </div>
         `;
       }
     })
     .join("");
 
-  // Navigate to step 2
-  navigateToStep(2);
+  // Attach click handlers to email buttons
+  document.querySelectorAll("[data-provider-id]").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      const providerId = e.currentTarget.getAttribute("data-provider-id");
+      const provider = providers.find((p) => p.id === providerId);
+      handleEmailAction(provider);
+    });
+  });
 
   // Initialize Lucide icons for dynamically added content
   if (typeof lucide !== "undefined") {
     lucide.createIcons();
+  }
+}
+
+// Handle email action
+function handleEmailAction(provider) {
+  if (!userData) {
+    // Show modal to collect user data
+    pendingAction = { type: "email", provider };
+    openModal(pendingAction);
+  } else {
+    // User data exists, generate email directly
+    const template = emailTemplates[currentLang];
+    const subject = encodeURIComponent(template.subject);
+    const body = encodeURIComponent(
+      template.body(userData.name, userData.email, userData.pin)
+    );
+    const mailtoLink = `mailto:${provider.email}?subject=${subject}&body=${body}`;
+
+    // Open email client
+    window.location.href = mailtoLink;
   }
 }
 
@@ -499,113 +617,11 @@ function toggleLanguage() {
   currentLang = currentLang === "sv" ? "en" : "sv";
   updateLanguage();
 
-  // Re-render email links if they exist and we're on step 2
-  if (emailLinks.innerHTML && currentStep === 2) {
-    const name = userName.value.trim();
-    const email = userEmail.value.trim();
-    const pin = userPIN.value.trim();
+  // Regenerate provider links with new language
+  generateProviderLinks();
 
-    // Only regenerate if we have the data
-    if (name && email) {
-      const selectedProviders = providers;
-      const template = emailTemplates[currentLang];
-
-      emailLinks.innerHTML = selectedProviders
-        .map((provider) => {
-          const domain = provider.email.split("@")[1];
-          const initial = provider.name.charAt(0).toUpperCase();
-          const logoSrc =
-            provider.logo || `https://logo.clearbit.com/${domain}`;
-
-          // Check if provider uses direct link or email
-          if (provider.removalMethod === "bankid") {
-            return `
-            <div class="email-link-item">
-                <div class="provider-logo-wrapper">
-                    <img src="${logoSrc}" 
-                         alt="${provider.name}" 
-                         class="provider-logo"
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                    <div class="provider-logo-fallback" style="display:none;">${initial}</div>
-                </div>
-                <div class="email-link-info">
-                    <div class="email-link-name">${provider.name}</div>
-                    <div class="email-link-desc">${
-                      provider.desc[currentLang]
-                    }</div>
-                </div>
-                <a href="${
-                  provider.directLink
-                }" target="_blank" rel="noopener noreferrer" class="email-link-btn bankid-btn">
-                    <i data-lucide="shield-check"></i>
-                    ${
-                      currentLang === "sv"
-                        ? "Ta bort med BankID"
-                        : "Remove with BankID"
-                    }
-                </a>
-            </div>
-        `;
-          } else if (provider.removalMethod === "webform") {
-            return `
-            <div class="email-link-item">
-                <div class="provider-logo-wrapper">
-                    <img src="${logoSrc}" 
-                         alt="${provider.name}" 
-                         class="provider-logo"
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                    <div class="provider-logo-fallback" style="display:none;">${initial}</div>
-                </div>
-                <div class="email-link-info">
-                    <div class="email-link-name">${provider.name}</div>
-                    <div class="email-link-desc">${
-                      provider.desc[currentLang]
-                    }</div>
-                </div>
-                <a href="${
-                  provider.directLink
-                }" target="_blank" rel="noopener noreferrer" class="email-link-btn webform-btn">
-                    <i data-lucide="external-link"></i>
-                    ${currentLang === "sv" ? "Öppna formulär" : "Open Form"}
-                </a>
-            </div>
-        `;
-          } else {
-            const subject = encodeURIComponent(template.subject);
-            const body = encodeURIComponent(template.body(name, email, pin));
-            const mailtoLink = `mailto:${provider.email}?subject=${subject}&body=${body}`;
-
-            return `
-            <div class="email-link-item">
-                <div class="provider-logo-wrapper">
-                    <img src="${logoSrc}" 
-                         alt="${provider.name}" 
-                         class="provider-logo"
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                    <div class="provider-logo-fallback" style="display:none;">${initial}</div>
-                </div>
-                <div class="email-link-info">
-                    <div class="email-link-name">${provider.name}</div>
-                    <div class="email-link-desc">${
-                      provider.desc[currentLang]
-                    }</div>
-                </div>
-                <a href="${mailtoLink}" class="email-link-btn">
-                    <i data-lucide="mail"></i>
-                    ${currentLang === "sv" ? "Skicka e-post" : "Send Email"}
-                </a>
-            </div>
-        `;
-          }
-        })
-        .join("");
-
-      // Re-initialize Lucide icons for dynamically added content
-      if (typeof lucide !== "undefined") {
-        lucide.createIcons();
-      }
-    }
-  }
+  // Update user info display if exists
+  updateUserInfoDisplay();
 }
 
 // Update language
