@@ -159,128 +159,117 @@
       </div>
     </section>
 
-    <!-- Wizard Container -->
-    <div id="wizardContainer" class="wizard-container">
-      <div class="wizard-track">
-        <!-- Step 1: Your Details -->
-        <section class="wizard-step" data-step="1">
-          <div class="step-header">
-            <div class="step-progress">
-              <span class="step-number">1/2</span>
-              <div class="progress-bar">
-                <div class="progress-fill" style="width: 50%"></div>
-              </div>
-            </div>
+    <!-- User Info Modal -->
+    <div id="userInfoModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="step-icon-large">
+            <i data-lucide="user-pen"></i>
           </div>
+          <h2 data-i18n="form.title">Dina uppgifter</h2>
+          <p class="modal-description" data-i18n="form.description"
+            >Fyll i dina uppgifter för att skapa personliga
+            GDPR-förfrågningar</p
+          >
+        </div>
 
-          <div class="step-content">
-            <div class="step-icon-large">
-              <i data-lucide="user-pen"></i>
-            </div>
-            <h2 data-i18n="form.title">Dina uppgifter</h2>
-            <p class="step-description" data-i18n="form.description"
-              >Fyll i dina uppgifter för att skapa personliga
-              GDPR-förfrågningar</p
+        <form id="userForm" class="modal-form">
+          <div class="form-group">
+            <label for="userName"
+              ><i data-lucide="user" class="label-icon"></i>
+              <span data-i18n="form.name"
+                >Fullständigt namn
+                <span class="required-asterisk">*</span></span
+              ></label
             >
-
-            <form id="userForm" class="wizard-form">
-              <div class="form-group">
-                <label for="userName"
-                  ><i data-lucide="user" class="label-icon"></i>
-                  <span data-i18n="form.name"
-                    >Fullständigt namn
-                    <span class="required-asterisk">*</span></span
-                  ></label
-                >
-                <input
-                  type="text"
-                  id="userName"
-                  required
-                  placeholder="Ex: Anna Andersson"
-                />
-              </div>
-              <div class="form-group">
-                <label for="userEmail"
-                  ><i data-lucide="mail" class="label-icon"></i>
-                  <span data-i18n="form.email"
-                    >E-postadress <span class="required-asterisk">*</span></span
-                  ></label
-                >
-                <input
-                  type="email"
-                  id="userEmail"
-                  required
-                  placeholder="Ex: anna@exempel.se"
-                />
-              </div>
-              <div class="form-group">
-                <label for="userPIN"
-                  ><i data-lucide="credit-card" class="label-icon"></i>
-                  <span data-i18n="form.pin"
-                    >Personnummer (valfritt)</span
-                  ></label
-                >
-                <input
-                  type="text"
-                  id="userPIN"
-                  placeholder="Ex: YYYYMMDD-XXXX"
-                />
-                <small data-i18n="form.pinHelp"
-                  >Kan underlätta identifiering men är inte obligatoriskt</small
-                >
-              </div>
-            </form>
+            <input
+              type="text"
+              id="userName"
+              required
+              placeholder="Ex: Anna Andersson"
+            />
           </div>
-
-          <div class="step-actions">
-            <button class="btn-secondary" id="backToLanding">
-              <i data-lucide="arrow-left"></i>
-              <span data-i18n="actions.back">Tillbaka</span>
-            </button>
-            <button class="btn-primary" id="nextToEmails" disabled>
-              <span data-i18n="actions.next">Nästa steg</span>
-              <i data-lucide="arrow-right"></i>
-            </button>
+          <div class="form-group">
+            <label for="userEmail"
+              ><i data-lucide="mail" class="label-icon"></i>
+              <span data-i18n="form.email"
+                >E-postadress <span class="required-asterisk">*</span></span
+              ></label
+            >
+            <input
+              type="email"
+              id="userEmail"
+              required
+              placeholder="Ex: anna@exempel.se"
+            />
           </div>
-        </section>
-
-        <!-- Step 2: Email Requests -->
-        <section class="wizard-step" data-step="2">
-          <div class="step-header">
-            <div class="step-progress">
-              <span class="step-number">2/2</span>
-              <div class="progress-bar">
-                <div class="progress-fill" style="width: 100%"></div>
-              </div>
-            </div>
+          <div class="form-group">
+            <label for="userPIN"
+              ><i data-lucide="credit-card" class="label-icon"></i>
+              <span data-i18n="form.pin"
+                >Personnummer (valfritt)</span
+              ></label
+            >
+            <input
+              type="text"
+              id="userPIN"
+              placeholder="Ex: YYYYMMDD-XXXX"
+            />
+            <small data-i18n="form.pinHelp"
+              >Kan underlätta identifiering men är inte obligatoriskt</small
+            >
           </div>
+        </form>
 
-          <div class="step-content">
-            <div class="step-icon-large success">
-              <i data-lucide="check-circle"></i>
-            </div>
+        <div class="modal-actions">
+          <button class="btn-secondary" id="cancelModal">
+            <i data-lucide="x"></i>
+            <span data-i18n="actions.cancel">Avbryt</span>
+          </button>
+          <button class="btn-primary" id="saveUserInfo" disabled>
+            <span data-i18n="actions.save">Spara och fortsätt</span>
+            <i data-lucide="check"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="mainContent" class="main-content">
+      <div class="content-header">
+        <div class="header-title">
+          <div class="step-icon-large success">
+            <i data-lucide="shield-check"></i>
+          </div>
+          <div>
             <h2 data-i18n="emails.title">Dina GDPR-förfrågningar</h2>
-            <p class="step-description" data-i18n="emails.instruction"
-              >Klicka på varje länk nedan för att öppna e-postmeddelandet.
-              Granska innehållet och skicka det från din e-postklient.</p
+            <p class="header-description" data-i18n="emails.instruction"
+              >För vissa tjänster kan du ta bort dina uppgifter direkt med BankID. För andra öppnar du e-postmeddelandet, granskar innehållet och skickar det från din e-postklient.</p
             >
+          </div>
+        </div>
 
-            <div id="emailLinks" class="email-links">
-              <!-- Populated by JavaScript -->
+        <!-- User Info Display (shown when data is saved) -->
+        <div id="userInfoDisplay" class="user-info-display" style="display: none;">
+          <div class="user-info-content">
+            <div class="user-info-icon">
+              <i data-lucide="user-check"></i>
+            </div>
+            <div class="user-info-details">
+              <div class="user-info-label" data-i18n="userInfo.savedAs">Sparade uppgifter:</div>
+              <div id="displayName" class="user-info-value"></div>
+              <div id="displayEmail" class="user-info-value"></div>
             </div>
           </div>
+          <button class="btn-edit" id="editUserInfo">
+            <i data-lucide="edit-2"></i>
+            <span data-i18n="actions.edit">Redigera</span>
+          </button>
+        </div>
+      </div>
 
-          <div class="step-actions">
-            <button class="btn-secondary" id="backToDetails">
-              <i data-lucide="arrow-left"></i>
-              <span data-i18n="actions.back">Tillbaka</span>
-            </button>
-            <button class="btn-primary" id="startOver">
-              <i data-lucide="rotate-ccw"></i>
-              <span data-i18n="actions.startOver">Börja om</span>
-            </button>
-          </div>
-        </section>
+      <div id="providersList" class="providers-list">
+        <!-- Populated by JavaScript -->
       </div>
 
       <footer>

@@ -42,6 +42,12 @@ const translations = {
       back: "Tillbaka",
       generate: "Generera förfrågningar",
       startOver: "Börja om",
+      cancel: "Avbryt",
+      save: "Spara och fortsätt",
+      edit: "Redigera",
+    },
+    userInfo: {
+      savedAs: "Sparade uppgifter:",
     },
     emails: {
       title: "Dina GDPR-förfrågningar",
@@ -96,6 +102,12 @@ const translations = {
       back: "Back",
       generate: "Generate Requests",
       startOver: "Start Over",
+      cancel: "Cancel",
+      save: "Save and Continue",
+      edit: "Edit",
+    },
+    userInfo: {
+      savedAs: "Saved information:",
     },
     emails: {
       title: "Your GDPR Requests",
@@ -265,7 +277,11 @@ ${name}`,
 
 // State
 let currentLang = "sv";
-let currentStep = 0; // 0 = landing, 1-3 = wizard steps
+let userData = {
+  name: "",
+  email: "",
+  pin: "",
+}; // Store user data in memory
 
 // DOM Elements
 const langSwitch = document.getElementById("langSwitch");
@@ -274,16 +290,21 @@ const userForm = document.getElementById("userForm");
 const userName = document.getElementById("userName");
 const userEmail = document.getElementById("userEmail");
 const userPIN = document.getElementById("userPIN");
-const emailLinks = document.getElementById("emailLinks");
+const providersList = document.getElementById("providersList");
+const userInfoModal = document.getElementById("userInfoModal");
+const cancelModal = document.getElementById("cancelModal");
+const saveUserInfo = document.getElementById("saveUserInfo");
+const editUserInfo = document.getElementById("editUserInfo");
+const userInfoDisplay = document.getElementById("userInfoDisplay");
+const displayName = document.getElementById("displayName");
+const displayEmail = document.getElementById("displayEmail");
 
-// Wizard navigation
-const wizardTrack = document.querySelector(".wizard-track");
+// Landing page elements
 const landingPage = document.getElementById("landing");
-const wizardContainer = document.getElementById("wizardContainer");
-const backToLanding = document.getElementById("backToLanding");
-const nextToEmails = document.getElementById("nextToEmails");
-const backToDetails = document.getElementById("backToDetails");
-const startOver = document.getElementById("startOver");
+const mainContent = document.getElementById("mainContent");
+
+// Pending action for modal
+let pendingAction = null;
 
 // Initialize
 function init() {
@@ -295,7 +316,66 @@ function init() {
 
 // Render providers (not displayed, just used for email generation)
 function renderProviders() {
-  // Providers are now handled internally, no UI needed
+  // Render all providers in the main view
+  providersList.innerHTML = providers
+    .map((provider) => {
+      const domain = provider.email.split("@")[1];
+      const initial = provider.name.charAt(0).toUpperCase();
+      const logoSrc = provider.logo || `https://logo.clearbit.com/${domain}`;
+
+      // Determine button based on removal method
+      let actionButton = "";
+      if (provider.removalMethod === "bankid") {
+        actionButton = `
+          <a href="${provider.directLink}" target="_blank" rel="noopener noreferrer" class="provider-action-btn bankid-btn">
+            <i data-lucide="shield-check"></i>
+            ${currentLang === "sv" ? "Ta bort med BankID" : "Remove with BankID"}
+          </a>
+        `;
+      } else if (provider.removalMethod === "webform") {
+        actionButton = `
+          <a href="${provider.directLink}" target="_blank" rel="noopener noreferrer" class="provider-action-btn webform-btn">
+            <i data-lucide="external-link"></i>
+            ${currentLang === "sv" ? "Öppna formulär" : "Open Form"}
+          </a>
+        `;
+      } else {
+        actionButton = `
+          <button class="provider-action-btn email-btn" data-provider-id="${provider.id}">
+            <i data-lucide="mail"></i>
+            ${currentLang === "sv" ? "Skicka e-post" : "Send Email"}
+          </button>
+        `;
+      }
+
+      return `
+        <div class="provider-item">
+          <div class="provider-logo-wrapper">
+            <img src="${logoSrc}" 
+                 alt="${provider.name}" 
+                 class="provider-logo"
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="provider-logo-fallback" style="display:none;">${initial}</div>
+          </div>
+          <div class="provider-info">
+            <div class="provider-name">${provider.name}</div>
+            <div class="provider-desc">${provider.desc[currentLang]}</div>
+          </div>
+          ${actionButton}
+        </div>
+      `;
+    })
+    .join("");
+
+  // Initialize Lucide icons for dynamically added content
+  if (typeof lucide !== "undefined") {
+    lucide.createIcons();
+  }
+
+  // Add event listeners to email buttons
+  document.querySelectorAll(".email-btn").forEach((btn) => {
+    btn.addEventListener("click", handleEmailButtonClick);
+  });
 }
 
 // Render carousel on landing page
@@ -328,284 +408,134 @@ function renderCarousel() {
 function setupEventListeners() {
   langSwitch.addEventListener("click", toggleLanguage);
 
-  // Landing page
-  startBtn.addEventListener("click", () => navigateToStep(1));
+  // Landing page - scroll to main content
+  startBtn.addEventListener("click", () => {
+    mainContent.scrollIntoView({ behavior: "smooth" });
+  });
 
-  // Step 1 navigation
-  backToLanding.addEventListener("click", () => navigateToStep(0));
-  nextToEmails.addEventListener("click", generateEmails);
-
-  // Step 2 navigation
-  backToDetails.addEventListener("click", () => navigateToStep(1));
-  startOver.addEventListener("click", resetWizard);
+  // Modal controls
+  cancelModal.addEventListener("click", closeModal);
+  saveUserInfo.addEventListener("click", saveUserData);
+  editUserInfo.addEventListener("click", openModalForEdit);
 
   // Form validation
-  userForm.addEventListener("input", validateStep1);
+  userForm.addEventListener("input", validateForm);
+
+  // Close modal when clicking outside
+  userInfoModal.addEventListener("click", (e) => {
+    if (e.target === userInfoModal) {
+      closeModal();
+    }
+  });
 }
 
-// Navigate between steps
-function navigateToStep(step) {
-  currentStep = step;
-
-  // Move the wizard track horizontally to the requested step
-  const offset = step === 0 ? 0 : (step - 1) * -100;
-  wizardTrack.style.transform = `translateX(${offset}vw)`;
-
-  // Scroll to the appropriate area rather than hiding the landing page
-  // so users can always scroll back up to the hero.
-  if (step === 0) {
-    landingPage.scrollIntoView({ behavior: "smooth" });
-  } else if (wizardContainer) {
-    wizardContainer.scrollIntoView({ behavior: "smooth" });
+// Handle email button click
+function handleEmailButtonClick(e) {
+  const providerId = e.currentTarget.getAttribute("data-provider-id");
+  
+  // Check if user data exists
+  if (userData.name && userData.email) {
+    // User data exists, generate and open email directly
+    openEmailForProvider(providerId);
+  } else {
+    // No user data, show modal
+    pendingAction = { type: "email", providerId };
+    openModal();
   }
+}
 
-  // Re-initialize Lucide icons
+// Open modal
+function openModal() {
+  userInfoModal.style.display = "flex";
+  // Re-initialize icons
   if (typeof lucide !== "undefined") {
     lucide.createIcons();
   }
 }
 
-// Validate Step 1
-function validateStep1() {
+// Close modal
+function closeModal() {
+  userInfoModal.style.display = "none";
+  pendingAction = null;
+}
+
+// Open modal for editing
+function openModalForEdit() {
+  // Populate form with existing data
+  userName.value = userData.name;
+  userEmail.value = userData.email;
+  userPIN.value = userData.pin;
+  
+  pendingAction = { type: "edit" };
+  openModal();
+  validateForm();
+}
+
+// Validate form
+function validateForm() {
   const isValid =
     userName.value.trim() &&
     userEmail.value.trim() &&
     userEmail.checkValidity();
-  nextToEmails.disabled = !isValid;
+  saveUserInfo.disabled = !isValid;
 }
 
-// Reset wizard
-function resetWizard() {
-  userName.value = "";
-  userEmail.value = "";
-  userPIN.value = "";
+// Save user data
+function saveUserData() {
+  userData.name = userName.value.trim();
+  userData.email = userEmail.value.trim();
+  userData.pin = userPIN.value.trim();
 
-  emailLinks.innerHTML = "";
+  // Update display
+  updateUserInfoDisplay();
 
-  navigateToStep(0);
+  // If there's a pending action, execute it
+  if (pendingAction && pendingAction.type === "email") {
+    openEmailForProvider(pendingAction.providerId);
+  }
+
+  closeModal();
 }
 
-// Generate emails
-function generateEmails() {
-  const name = userName.value.trim();
-  const email = userEmail.value.trim();
-  const pin = userPIN.value.trim();
+// Update user info display
+function updateUserInfoDisplay() {
+  if (userData.name && userData.email) {
+    displayName.textContent = userData.name;
+    displayEmail.textContent = userData.email;
+    userInfoDisplay.style.display = "flex";
+    
+    // Re-initialize icons
+    if (typeof lucide !== "undefined") {
+      lucide.createIcons();
+    }
+  } else {
+    userInfoDisplay.style.display = "none";
+  }
+}
 
-  // Use all providers automatically
-  const selectedProviders = providers;
+// Open email for specific provider
+function openEmailForProvider(providerId) {
+  const provider = providers.find((p) => p.id === providerId);
+  if (!provider) return;
 
   const template = emailTemplates[currentLang];
+  const subject = encodeURIComponent(template.subject);
+  const body = encodeURIComponent(
+    template.body(userData.name, userData.email, userData.pin)
+  );
+  const mailtoLink = `mailto:${provider.email}?subject=${subject}&body=${body}`;
 
-  emailLinks.innerHTML = selectedProviders
-    .map((provider) => {
-      const domain = provider.email.split("@")[1];
-      const initial = provider.name.charAt(0).toUpperCase();
-      const logoSrc = provider.logo || `https://logo.clearbit.com/${domain}`;
-
-      // Check if provider uses direct link or email
-      if (provider.removalMethod === "bankid") {
-        return `
-            <div class="email-link-item">
-                <div class="provider-logo-wrapper">
-                    <img src="${logoSrc}" 
-                         alt="${provider.name}" 
-                         class="provider-logo"
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                    <div class="provider-logo-fallback" style="display:none;">${initial}</div>
-                </div>
-                <div class="email-link-info">
-                    <div class="email-link-name">${provider.name}</div>
-                    <div class="email-link-desc">${
-                      provider.desc[currentLang]
-                    }</div>
-                </div>
-                <a href="${
-                  provider.directLink
-                }" target="_blank" rel="noopener noreferrer" class="email-link-btn bankid-btn">
-                    <i data-lucide="shield-check"></i>
-                    ${
-                      currentLang === "sv"
-                        ? "Ta bort med BankID"
-                        : "Remove with BankID"
-                    }
-                </a>
-            </div>
-        `;
-      } else if (provider.removalMethod === "webform") {
-        return `
-            <div class="email-link-item">
-                <div class="provider-logo-wrapper">
-                    <img src="${logoSrc}" 
-                         alt="${provider.name}" 
-                         class="provider-logo"
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                    <div class="provider-logo-fallback" style="display:none;">${initial}</div>
-                </div>
-                <div class="email-link-info">
-                    <div class="email-link-name">${provider.name}</div>
-                    <div class="email-link-desc">${
-                      provider.desc[currentLang]
-                    }</div>
-                </div>
-                <a href="${
-                  provider.directLink
-                }" target="_blank" rel="noopener noreferrer" class="email-link-btn webform-btn">
-                    <i data-lucide="external-link"></i>
-                    ${currentLang === "sv" ? "Öppna formulär" : "Open Form"}
-                </a>
-            </div>
-        `;
-      } else {
-        const subject = encodeURIComponent(template.subject);
-        const body = encodeURIComponent(template.body(name, email, pin));
-        const mailtoLink = `mailto:${provider.email}?subject=${subject}&body=${body}`;
-
-        return `
-            <div class="email-link-item">
-                <div class="provider-logo-wrapper">
-                    <img src="${logoSrc}" 
-                         alt="${provider.name}" 
-                         class="provider-logo"
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                    <div class="provider-logo-fallback" style="display:none;">${initial}</div>
-                </div>
-                <div class="email-link-info">
-                    <div class="email-link-name">${provider.name}</div>
-                    <div class="email-link-desc">${
-                      provider.desc[currentLang]
-                    }</div>
-                </div>
-                <a href="${mailtoLink}" class="email-link-btn">
-                    <i data-lucide="mail"></i>
-                    ${currentLang === "sv" ? "Skicka e-post" : "Send Email"}
-                </a>
-            </div>
-        `;
-      }
-    })
-    .join("");
-
-  // Navigate to step 2
-  navigateToStep(2);
-
-  // Initialize Lucide icons for dynamically added content
-  if (typeof lucide !== "undefined") {
-    lucide.createIcons();
-  }
+  // Open mailto link
+  window.location.href = mailtoLink;
 }
 
 // Toggle language
 function toggleLanguage() {
   currentLang = currentLang === "sv" ? "en" : "sv";
   updateLanguage();
-
-  // Re-render email links if they exist and we're on step 2
-  if (emailLinks.innerHTML && currentStep === 2) {
-    const name = userName.value.trim();
-    const email = userEmail.value.trim();
-    const pin = userPIN.value.trim();
-
-    // Only regenerate if we have the data
-    if (name && email) {
-      const selectedProviders = providers;
-      const template = emailTemplates[currentLang];
-
-      emailLinks.innerHTML = selectedProviders
-        .map((provider) => {
-          const domain = provider.email.split("@")[1];
-          const initial = provider.name.charAt(0).toUpperCase();
-          const logoSrc =
-            provider.logo || `https://logo.clearbit.com/${domain}`;
-
-          // Check if provider uses direct link or email
-          if (provider.removalMethod === "bankid") {
-            return `
-            <div class="email-link-item">
-                <div class="provider-logo-wrapper">
-                    <img src="${logoSrc}" 
-                         alt="${provider.name}" 
-                         class="provider-logo"
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                    <div class="provider-logo-fallback" style="display:none;">${initial}</div>
-                </div>
-                <div class="email-link-info">
-                    <div class="email-link-name">${provider.name}</div>
-                    <div class="email-link-desc">${
-                      provider.desc[currentLang]
-                    }</div>
-                </div>
-                <a href="${
-                  provider.directLink
-                }" target="_blank" rel="noopener noreferrer" class="email-link-btn bankid-btn">
-                    <i data-lucide="shield-check"></i>
-                    ${
-                      currentLang === "sv"
-                        ? "Ta bort med BankID"
-                        : "Remove with BankID"
-                    }
-                </a>
-            </div>
-        `;
-          } else if (provider.removalMethod === "webform") {
-            return `
-            <div class="email-link-item">
-                <div class="provider-logo-wrapper">
-                    <img src="${logoSrc}" 
-                         alt="${provider.name}" 
-                         class="provider-logo"
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                    <div class="provider-logo-fallback" style="display:none;">${initial}</div>
-                </div>
-                <div class="email-link-info">
-                    <div class="email-link-name">${provider.name}</div>
-                    <div class="email-link-desc">${
-                      provider.desc[currentLang]
-                    }</div>
-                </div>
-                <a href="${
-                  provider.directLink
-                }" target="_blank" rel="noopener noreferrer" class="email-link-btn webform-btn">
-                    <i data-lucide="external-link"></i>
-                    ${currentLang === "sv" ? "Öppna formulär" : "Open Form"}
-                </a>
-            </div>
-        `;
-          } else {
-            const subject = encodeURIComponent(template.subject);
-            const body = encodeURIComponent(template.body(name, email, pin));
-            const mailtoLink = `mailto:${provider.email}?subject=${subject}&body=${body}`;
-
-            return `
-            <div class="email-link-item">
-                <div class="provider-logo-wrapper">
-                    <img src="${logoSrc}" 
-                         alt="${provider.name}" 
-                         class="provider-logo"
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                    <div class="provider-logo-fallback" style="display:none;">${initial}</div>
-                </div>
-                <div class="email-link-info">
-                    <div class="email-link-name">${provider.name}</div>
-                    <div class="email-link-desc">${
-                      provider.desc[currentLang]
-                    }</div>
-                </div>
-                <a href="${mailtoLink}" class="email-link-btn">
-                    <i data-lucide="mail"></i>
-                    ${currentLang === "sv" ? "Skicka e-post" : "Send Email"}
-                </a>
-            </div>
-        `;
-          }
-        })
-        .join("");
-
-      // Re-initialize Lucide icons for dynamically added content
-      if (typeof lucide !== "undefined") {
-        lucide.createIcons();
-      }
-    }
-  }
+  
+  // Re-render providers with new language
+  renderProviders();
 }
 
 // Update language
