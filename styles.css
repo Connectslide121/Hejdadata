@@ -743,6 +743,8 @@ body {
   flex-direction: column;
   gap: 1rem;
   width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .email-link-item {
@@ -972,13 +974,25 @@ body {
   }
 
   .email-link-item {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+
+  .email-link-item .provider-logo-wrapper {
+    flex-shrink: 0;
+  }
+
+  .email-link-item .email-link-info {
+    flex: 1;
+    min-width: 0;
   }
 
   .email-link-btn {
     width: 100%;
+    flex-basis: 100%;
     justify-content: center;
   }
 
