@@ -972,14 +972,23 @@ body {
   }
 
   .email-link-item {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .provider-logo-wrapper {
+    flex-shrink: 0;
+  }
+
+  .email-link-info {
+    flex: 1;
+    min-width: 0; /* Allow text truncation if needed */
   }
 
   .email-link-btn {
     width: 100%;
     justify-content: center;
+    flex-basis: 100%; /* Force button to new line */
   }
 
   .user-info-content {
