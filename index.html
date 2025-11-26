@@ -96,11 +96,38 @@
     </script>
   </head>
   <body>
-    <!-- Global Language Toggle -->
-    <div class="language-toggle">
-      <button id="langSwitch" class="lang-btn"
-        ><i data-lucide="globe"></i> English</button
-      >
+    <div class="landing-header">
+      <nav class="main-nav">
+        <a
+          class="nav-link"
+          onclick="openInfoModal('how-it-works')"
+          data-i18n="footer.howItWorks"
+          >Så fungerar det</a
+        >
+        <a
+          class="nav-link"
+          onclick="openInfoModal('faq')"
+          data-i18n="footer.faq"
+          >Vanliga frågor</a
+        >
+        <a
+          class="nav-link"
+          onclick="openInfoModal('integritet')"
+          data-i18n="footer.privacyPolicy"
+          >Integritetspolicy</a
+        >
+        <a
+          class="nav-link"
+          onclick="openInfoModal('about')"
+          data-i18n="footer.about"
+          >Om oss</a
+        >
+      </nav>
+      <div class="language-toggle">
+        <button id="langSwitch" class="lang-btn"
+          ><i data-lucide="globe"></i> English</button
+        >
+      </div>
     </div>
 
     <!-- Landing Page -->
@@ -196,11 +223,88 @@
           <div id="emailLinks" class="email-links">
             <!-- Populated by JavaScript -->
           </div>
+
+          <!-- SEO Content Block -->
+          <div
+            class="seo-content-block"
+            style="
+              margin-top: 4rem;
+              padding-top: 2rem;
+              border-top: 1px solid var(--border-color);
+            "
+          >
+            <h3
+              style="
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+                color: var(--text-dark);
+              "
+              data-i18n="seo.title"
+              >Varför ska du ta bort dina uppgifter?</h3
+            >
+            <p
+              style="margin-bottom: 1rem; color: var(--text-light)"
+              data-i18n="seo.p1"
+            >
+              I Sverige är offentlighetsprincipen stark, vilket innebär att
+              myndighetsdata ofta är tillgänglig för allmänheten. Detta
+              utnyttjas av privata företag som Ratsit, MrKoll, Hitta.se och
+              Eniro för att skapa sökbara databaser över hela befolkningen. För
+              många kan detta kännas som ett intrång i privatlivet.
+            </p>
+            <p
+              style="margin-bottom: 1rem; color: var(--text-light)"
+              data-i18n="seo.p2"
+            >
+              Genom att använda <strong>Hejda Data</strong> kan du enkelt utöva
+              din rätt enligt GDPR (Dataskyddsförordningen) att bli bortglömd
+              eller begränsa hur dina uppgifter visas. Att manuellt kontakta
+              varje tjänst är tidskrävande och krångligt. Vi har samlat
+              direktlänkar till BankID-borttagning och skapat färdiga
+              e-postmallar med korrekta juridiska hänvisningar för att maximera
+              chansen att dina uppgifter tas bort snabbt och effektivt.
+            </p>
+            <p style="color: var(--text-light)" data-i18n="seo.p3">
+              Skydda din integritet, minska risken för ID-kapning och ta
+              kontroll över ditt digitala fotavtryck idag. Tjänsten är helt
+              gratis och vi sparar ingen information om dig.
+            </p>
+          </div>
         </div>
       </section>
 
       <footer>
         <div class="footer-content">
+          <div class="footer-links">
+            <a
+              href="#"
+              onclick="openInfoModal('how-it-works'); return false;"
+              class="footer-link"
+              data-i18n="footer.howItWorks"
+              >Så fungerar det</a
+            >
+            <a
+              href="#"
+              onclick="openInfoModal('faq'); return false;"
+              class="footer-link"
+              data-i18n="footer.faq"
+              >Vanliga frågor</a
+            >
+            <a
+              href="#"
+              onclick="openInfoModal('integritet'); return false;"
+              class="footer-link"
+              data-i18n="footer.privacyPolicy"
+              >Integritetspolicy</a
+            >
+            <a
+              href="#"
+              onclick="openInfoModal('about'); return false;"
+              class="footer-link"
+              data-i18n="footer.about"
+              >Om oss</a
+            >
+          </div>
           <p data-i18n="footer.rights"
             >© 2025 Hejda Data. Alla rättigheter förbehållna.</p
           >
@@ -284,6 +388,662 @@
       </div>
     </div>
 
+    <!-- Info Modal -->
+    <div id="infoModal" class="modal">
+      <div class="modal-content info-modal-content">
+        <button class="info-modal-close" onclick="closeInfoModal()">
+          <i data-lucide="x"></i>
+        </button>
+        <div id="infoModalBody" class="info-modal-body">
+          <!-- Content injected here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Hidden Content Sources -->
+    <div style="display: none">
+      <!-- How It Works -->
+      <div id="content-how-it-works">
+        <!-- Swedish Content -->
+        <div class="lang-sv">
+          <h1>Så fungerar det</h1>
+          <p
+            >Att ta kontroll över sina personuppgifter på nätet kan kännas
+            överväldigande. Hejda Data är skapat för att förenkla processen och
+            hjälpa dig utnyttja dina rättigheter enligt GDPR. Här förklarar vi
+            hur det fungerar, varför dina uppgifter syns offentligt och hur du
+            kan ta bort dem.</p
+          >
+          <h2>Vad är GDPR och rätten att bli glömd?</h2>
+          <p
+            >Dataskyddsförordningen (GDPR) är en EU-lag som trädde i kraft 2018
+            för att stärka skyddet för privatpersoners personuppgifter. En av de
+            viktigaste delarna är <strong>Artikel 17</strong>, även känd som
+            "rätten att bli bortglömd" (Right to Erasure).</p
+          >
+          <p
+            >Denna artikel ger dig rätt att begära att företag och
+            organisationer tar bort dina personuppgifter om det inte längre
+            finns skäl för dem att behålla dem. Det gäller till exempel om du
+            inte längre är kund, eller om du återkallar ett samtycke.</p
+          >
+          <h2>Varför finns mina uppgifter på nätet?</h2>
+          <p
+            >I Sverige har vi en lång tradition av offentlighet genom
+            <strong>offentlighetsprincipen</strong>. Det innebär att många
+            uppgifter om medborgare, såsom namn, adress, födelsedatum och
+            civilstånd, är allmänna handlingar som kan begäras ut från
+            myndigheter som Skatteverket.</p
+          >
+          <p
+            >Många katalogtjänster och upplysningssajter utnyttjar detta genom
+            att köpa in eller begära ut stora mängder data för att publicera på
+            sina webbplatser. De skaffar ofta ett så kallat
+            <strong>utgivningsbevis</strong>, vilket ger dem ett grundlagsskydd
+            som i vissa fall kan trumfa GDPR. Detta gör att de kan publicera
+            personuppgifter utan ditt samtycke.</p
+          >
+          <h2>Hur fungerar borttagningsprocessen?</h2>
+          <p
+            >Trots utgivningsbeviset väljer många seriösa aktörer att respektera
+            enskildas önskemål om att inte synas, särskilt om det finns
+            skyddsbehov eller om man helt enkelt vill värna sin integritet.
+            Processen ser dock olika ut för olika tjänster:</p
+          >
+          <ul>
+            <li
+              ><strong>BankID-inloggning:</strong> Vissa tjänster (t.ex. Ratsit,
+              Hitta.se, MrKoll) har automatiserade system där du kan logga in
+              med BankID och dölja dig själv direkt.</li
+            >
+            <li
+              ><strong>Webbformulär:</strong> Andra kräver att du fyller i ett
+              specifikt formulär på deras hemsida.</li
+            >
+            <li
+              ><strong>E-postkontakt:</strong> För många tjänster måste du
+              skicka ett mail till deras kundtjänst eller dataskyddsombud och
+              specifikt begära borttagning.</li
+            >
+          </ul>
+          <h2>Varför använda Hejda Data?</h2>
+          <p
+            >Att manuellt leta upp kontaktuppgifter och formulera mail till
+            dussintals olika sajter tar tid och energi. Hejda Data samlar allt
+            på ett ställe:</p
+          >
+          <ul>
+            <li
+              ><strong>Samlad information:</strong> Vi listar de största svenska
+              katalogtjänsterna.</li
+            >
+            <li
+              ><strong>Direktlänkar:</strong> Vi länkar direkt till sidorna där
+              du kan ta bort dig med BankID.</li
+            >
+            <li
+              ><strong>Färdiga mallar:</strong> För tjänster som kräver mail
+              genererar vi färdiga meddelanden med hänvisning till rätt lagrum i
+              GDPR, så att du slipper skriva dem själv.</li
+            >
+            <li
+              ><strong>Integritetssäkert:</strong> Allt sker i din webbläsare.
+              Vi sparar ingen data om dig.</li
+            >
+          </ul>
+          <p
+            >Genom att använda Hejda Data sparar du timmar av arbete och
+            säkerställer att dina förfrågningar är korrekt formulerade för att
+            ge bäst chans till resultat.</p
+          >
+        </div>
+        <!-- English Content -->
+        <div class="lang-en" style="display: none">
+          <h1>How It Works</h1>
+          <p
+            >Taking control of your personal data online can feel overwhelming.
+            Hejda Data is created to simplify the process and help you exercise
+            your rights under GDPR. Here we explain how it works, why your data
+            appears publicly, and how you can remove it.</p
+          >
+          <h2>What is GDPR and the Right to be Forgotten?</h2>
+          <p
+            >The General Data Protection Regulation (GDPR) is an EU law that
+            came into force in 2018 to strengthen the protection of individuals'
+            personal data. One of the most important parts is
+            <strong>Article 17</strong>, also known as the "Right to Erasure" or
+            "Right to be Forgotten".</p
+          >
+          <p
+            >This article gives you the right to request that companies and
+            organizations delete your personal data if there is no longer a
+            reason for them to keep it. This applies, for example, if you are no
+            longer a customer, or if you withdraw your consent.</p
+          >
+          <h2>Why is my data online?</h2>
+          <p
+            >In Sweden, we have a long tradition of transparency through the
+            <strong>principle of public access</strong>. This means that much
+            information about citizens, such as name, address, date of birth,
+            and marital status, are public documents that can be requested from
+            authorities like the Tax Agency (Skatteverket).</p
+          >
+          <p
+            >Many directory services and information sites exploit this by
+            purchasing or requesting large amounts of data to publish on their
+            websites. They often obtain a so-called
+            <strong>publishing certificate</strong> (utgivningsbevis), which
+            gives them constitutional protection that in some cases can trump
+            GDPR. This allows them to publish personal data without your
+            consent.</p
+          >
+          <h2>How does the removal process work?</h2>
+          <p
+            >Despite the publishing certificate, many serious actors choose to
+            respect individuals' wishes not to be visible, especially if there
+            is a need for protection or if one simply wants to protect their
+            privacy. However, the process looks different for different
+            services:</p
+          >
+          <ul>
+            <li
+              ><strong>BankID Login:</strong> Some services (e.g., Ratsit,
+              Hitta.se, MrKoll) have automated systems where you can log in with
+              BankID and hide yourself directly.</li
+            >
+            <li
+              ><strong>Web Forms:</strong> Others require you to fill out a
+              specific form on their website.</li
+            >
+            <li
+              ><strong>Email Contact:</strong> For many services, you must send
+              an email to their customer service or data protection officer and
+              specifically request removal.</li
+            >
+          </ul>
+          <h2>Why use Hejda Data?</h2>
+          <p
+            >Manually looking up contact information and formulating emails to
+            dozens of different sites takes time and energy. Hejda Data gathers
+            everything in one place:</p
+          >
+          <ul>
+            <li
+              ><strong>Aggregated Information:</strong> We list the largest
+              Swedish directory services.</li
+            >
+            <li
+              ><strong>Direct Links:</strong> We link directly to the pages
+              where you can remove yourself with BankID.</li
+            >
+            <li
+              ><strong>Ready-made Templates:</strong> For services that require
+              email, we generate ready-made messages with references to the
+              correct legal sections in GDPR, so you don't have to write them
+              yourself.</li
+            >
+            <li
+              ><strong>Privacy Safe:</strong> Everything happens in your
+              browser. We save no data about you.</li
+            >
+          </ul>
+          <p
+            >By using Hejda Data, you save hours of work and ensure that your
+            requests are correctly formulated to give the best chance of
+            results.</p
+          >
+        </div>
+      </div>
+
+      <!-- FAQ -->
+      <div id="content-faq">
+        <!-- Swedish Content -->
+        <div class="lang-sv">
+          <h1>Vanliga frågor</h1>
+          <div class="faq-item"
+            ><div class="faq-question"
+              ><i data-lucide="help-circle"></i> Är Hejda Data gratis att
+              använda?</div
+            ><div class="faq-answer"
+              >Ja, Hejda Data är 100% gratis. Vi tar inte betalt för att
+              generera mail eller länka till borttagningssidor. Projektet drivs
+              ideellt för att främja personlig integritet.</div
+            ></div
+          >
+          <div class="faq-item"
+            ><div class="faq-question"
+              ><i data-lucide="help-circle"></i> Sparar ni mina
+              personuppgifter?</div
+            ><div class="faq-answer"
+              >Nej. All information du matar in (namn, e-post, personnummer)
+              hanteras enbart lokalt i din webbläsare. Ingenting skickas till
+              våra servrar eller sparas i någon databas hos oss. När du stänger
+              fliken försvinner informationen.</div
+            ></div
+          >
+          <div class="faq-item"
+            ><div class="faq-question"
+              ><i data-lucide="help-circle"></i> Försvinner mina uppgifter för
+              alltid?</div
+            ><div class="faq-answer"
+              >När ett företag tar bort dina uppgifter ska de vara borta. Men
+              eftersom uppgifterna ofta hämtas från myndighetsregister (t.ex.
+              Skatteverket) kan de ibland dyka upp igen om registren uppdateras
+              och företaget inte har spärrat ditt personnummer. Det kan vara bra
+              att kontrollera igen om ett år.</div
+            ></div
+          >
+          <div class="faq-item"
+            ><div class="faq-question"
+              ><i data-lucide="help-circle"></i> Hur lång tid tar det innan jag
+              försvinner?</div
+            ><div class="faq-answer"
+              >Det varierar. Tjänster med BankID-inloggning tar ofta bort
+              uppgifterna direkt eller inom 24 timmar. För manuella
+              förfrågningar via e-post har företagen enligt GDPR upp till en
+              månad på sig att svara och åtgärda ärendet.</div
+            ></div
+          >
+          <div class="faq-item"
+            ><div class="faq-question"
+              ><i data-lucide="help-circle"></i> Vad gör jag om de inte
+              svarar?</div
+            ><div class="faq-answer"
+              >Om ett företag inte svarar inom en månad kan du skicka en
+              påminnelse. Om de fortfarande ignorerar din begäran eller nekar
+              utan giltig anledning kan du vända dig till
+              Integritetsskyddsmyndigheten (IMY) och lämna ett klagomål.</div
+            ></div
+          >
+          <div class="faq-item"
+            ><div class="faq-question"
+              ><i data-lucide="help-circle"></i> Varför måste jag skicka mailen
+              själv?</div
+            ><div class="faq-answer"
+              >För att begäran ska vara giltig och tas på allvar måste den komma
+              från dig personligen. Om vi skickade massutskick skulle de
+              sannolikt hamna i skräpposten eller ignoreras. Genom att du
+              skickar från din egen e-postadress kan företaget också svara dig
+              direkt.</div
+            ></div
+          >
+          <div class="faq-item"
+            ><div class="faq-question"
+              ><i data-lucide="help-circle"></i> Kan jag ta bort uppgifter åt
+              någon annan?</div
+            ><div class="faq-answer"
+              >Generellt sett nej, du kan bara företräda dig själv. Undantaget
+              är om du är vårdnadshavare för ett barn eller har en fullmakt att
+              företräda en annan person.</div
+            ></div
+          >
+          <div class="faq-item"
+            ><div class="faq-question"
+              ><i data-lucide="help-circle"></i> Vad är ett
+              utgivningsbevis?</div
+            ><div class="faq-answer"
+              >Ett utgivningsbevis är ett tillstånd som ger en webbplats
+              grundlagsskydd enligt Yttrandefrihetsgrundlagen. Det innebär att
+              de i vissa fall kan publicera personuppgifter utan att behöva
+              följa alla delar av GDPR. Många sajter väljer dock ändå att ta
+              bort personer som ber om det.</div
+            ></div
+          >
+          <div class="faq-item"
+            ><div class="faq-question"
+              ><i data-lucide="help-circle"></i> Fungerar detta för alla
+              sajter?</div
+            ><div class="faq-answer"
+              >Vi har samlat de största och vanligaste katalogtjänsterna i
+              Sverige. Det finns fler mindre aktörer, men genom att täcka de
+              stora (som Ratsit, Hitta, Eniro, MrKoll) får du bort den största
+              delen av din synlighet på nätet.</div
+            ></div
+          >
+          <div class="faq-item"
+            ><div class="faq-question"
+              ><i data-lucide="help-circle"></i> Hur kan jag stötta Hejda
+              Data?</div
+            ><div class="faq-answer"
+              >Det bästa sättet att stötta oss är att dela tjänsten med vänner
+              och familj! Ju fler som använder sin rätt att bli bortglömd, desto
+              mer press sätter vi på företag att respektera personlig
+              integritet.</div
+            ></div
+          >
+        </div>
+        <!-- English Content -->
+        <div class="lang-en" style="display: none">
+          <h1>Frequently Asked Questions</h1>
+          <div class="faq-item"
+            ><div class="faq-question"
+              ><i data-lucide="help-circle"></i> Is Hejda Data free to use?</div
+            ><div class="faq-answer"
+              >Yes, Hejda Data is 100% free. We do not charge for generating
+              emails or linking to removal pages. The project is run non-profit
+              to promote personal privacy.</div
+            ></div
+          >
+          <div class="faq-item"
+            ><div class="faq-question"
+              ><i data-lucide="help-circle"></i> Do you save my personal
+              data?</div
+            ><div class="faq-answer"
+              >No. All information you enter (name, email, personal ID number)
+              is handled solely locally in your browser. Nothing is sent to our
+              servers or saved in any database with us. When you close the tab,
+              the information disappears.</div
+            ></div
+          >
+          <div class="faq-item"
+            ><div class="faq-question"
+              ><i data-lucide="help-circle"></i> Does my data disappear
+              forever?</div
+            ><div class="faq-answer"
+              >When a company removes your data, it should be gone. However,
+              since the data is often retrieved from government registers (e.g.,
+              the Tax Agency), it can sometimes reappear if the registers are
+              updated and the company has not blocked your personal ID number.
+              It can be good to check again in a year.</div
+            ></div
+          >
+          <div class="faq-item"
+            ><div class="faq-question"
+              ><i data-lucide="help-circle"></i> How long does it take before I
+              disappear?</div
+            ><div class="faq-answer"
+              >It varies. Services with BankID login often remove the data
+              immediately or within 24 hours. For manual requests via email,
+              companies have up to one month under GDPR to respond and address
+              the matter.</div
+            ></div
+          >
+          <div class="faq-item"
+            ><div class="faq-question"
+              ><i data-lucide="help-circle"></i> What do I do if they don't
+              answer?</div
+            ><div class="faq-answer"
+              >If a company does not answer within a month, you can send a
+              reminder. If they still ignore your request or refuse without a
+              valid reason, you can turn to the Swedish Authority for Privacy
+              Protection (IMY) and file a complaint.</div
+            ></div
+          >
+          <div class="faq-item"
+            ><div class="faq-question"
+              ><i data-lucide="help-circle"></i> Why do I have to send the
+              emails myself?</div
+            ><div class="faq-answer"
+              >For the request to be valid and taken seriously, it must come
+              from you personally. If we sent mass mailings, they would likely
+              end up in spam or be ignored. By sending from your own email
+              address, the company can also reply to you directly.</div
+            ></div
+          >
+          <div class="faq-item"
+            ><div class="faq-question"
+              ><i data-lucide="help-circle"></i> Can I remove data for someone
+              else?</div
+            ><div class="faq-answer"
+              >Generally no, you can only represent yourself. The exception is
+              if you are the guardian of a child or have a power of attorney to
+              represent another person.</div
+            ></div
+          >
+          <div class="faq-item"
+            ><div class="faq-question"
+              ><i data-lucide="help-circle"></i> What is a publishing
+              certificate?</div
+            ><div class="faq-answer"
+              >A publishing certificate (utgivningsbevis) is a permit that gives
+              a website constitutional protection under the Fundamental Law on
+              Freedom of Expression. This means that in some cases they can
+              publish personal data without having to follow all parts of GDPR.
+              However, many sites still choose to remove people who ask for
+              it.</div
+            ></div
+          >
+          <div class="faq-item"
+            ><div class="faq-question"
+              ><i data-lucide="help-circle"></i> Does this work for all
+              sites?</div
+            ><div class="faq-answer"
+              >We have collected the largest and most common directory services
+              in Sweden. There are more smaller players, but by covering the big
+              ones (like Ratsit, Hitta, Eniro, MrKoll) you remove the majority
+              of your visibility online.</div
+            ></div
+          >
+          <div class="faq-item"
+            ><div class="faq-question"
+              ><i data-lucide="help-circle"></i> How can I support Hejda
+              Data?</div
+            ><div class="faq-answer"
+              >The best way to support us is to share the service with friends
+              and family! The more people who use their right to be forgotten,
+              the more pressure we put on companies to respect personal
+              privacy.</div
+            ></div
+          >
+        </div>
+      </div>
+
+      <!-- Privacy Policy -->
+      <div id="content-integritet">
+        <!-- Swedish Content -->
+        <div class="lang-sv">
+          <h1>Integritetspolicy</h1>
+          <p>Senast uppdaterad: 2025-11-26</p>
+          <p
+            >På Hejda Data tar vi din integritet på största allvar. Hela syftet
+            med vår tjänst är att hjälpa dig skydda dina personuppgifter, och
+            därför har vi byggt tjänsten med "Privacy by Design" som
+            grundprincip.</p
+          >
+          <h2>Ingen datalagring</h2>
+          <p
+            >Vi sparar inte, loggar inte och har inte tillgång till de
+            personuppgifter du matar in i formuläret (namn, e-post,
+            personnummer).</p
+          >
+          <p
+            >All databehandling sker lokalt i din webbläsare (Client-Side). När
+            du klickar på "Generera förfrågningar" skapas mail-länkarna direkt
+            på din enhet. Ingen information skickas till någon server som vi
+            kontrollerar.</p
+          >
+          <h2>Inga konton</h2>
+          <p
+            >Du behöver inte skapa något konto eller registrera dig för att
+            använda Hejda Data. Tjänsten är helt öppen och kräver ingen
+            inloggning.</p
+          >
+          <h2>Cookies och spårning</h2>
+          <p
+            >Vi använder inga egna cookies för att spåra dig. Vi använder inte
+            Google Analytics eller liknande verktyg för att analysera
+            användarbeteende på individnivå.</p
+          >
+          <p
+            ><strong>Google AdSense:</strong> Vi visar annonser via Google
+            AdSense för att täcka kostnaderna för domän och drift. Google kan
+            använda cookies för att visa relevanta annonser baserat på dina
+            tidigare besök på denna och andra webbplatser. Du kan läsa mer om
+            hur Google hanterar data i deras
+            <a
+              href="https://policies.google.com/technologies/ads"
+              target="_blank"
+              rel="noopener noreferrer"
+              >annonseringspolicy</a
+            >.</p
+          >
+          <h2>Externa länkar</h2>
+          <p
+            >Vår tjänst innehåller länkar till andra webbplatser (t.ex. Ratsit,
+            MrKoll, Hitta.se). Vi ansvarar inte för integritetspolicys eller
+            innehåll på dessa externa webbplatser. När du lämnar Hejda Data
+            uppmanar vi dig att läsa integritetspolicyn för varje webbplats du
+            besöker.</p
+          >
+          <h2>Kontakt</h2>
+          <p
+            >Om du har frågor om denna policy eller vår tjänst, vänligen
+            kontakta oss via GitHub-repositoryt där källkoden för detta projekt
+            ligger öppet för granskning.</p
+          >
+        </div>
+        <!-- English Content -->
+        <div class="lang-en" style="display: none">
+          <h1>Privacy Policy</h1>
+          <p>Last updated: 2025-11-26</p>
+          <p
+            >At Hejda Data, we take your privacy very seriously. The entire
+            purpose of our service is to help you protect your personal data,
+            and therefore we have built the service with "Privacy by Design" as
+            a core principle.</p
+          >
+          <h2>No Data Storage</h2>
+          <p
+            >We do not save, log, or have access to the personal data you enter
+            in the form (name, email, personal ID number).</p
+          >
+          <p
+            >All data processing takes place locally in your browser
+            (Client-Side). When you click "Generate Requests", the email links
+            are created directly on your device. No information is sent to any
+            server we control.</p
+          >
+          <h2>No Accounts</h2>
+          <p
+            >You do not need to create an account or register to use Hejda Data.
+            The service is completely open and requires no login.</p
+          >
+          <h2>Cookies and Tracking</h2>
+          <p
+            >We do not use any cookies of our own to track you. We do not use
+            Google Analytics or similar tools to analyze user behavior at an
+            individual level.</p
+          >
+          <p
+            ><strong>Google AdSense:</strong> We display ads via Google AdSense
+            to cover the costs of domain and hosting. Google may use cookies to
+            show relevant ads based on your previous visits to this and other
+            websites. You can read more about how Google handles data in their
+            <a
+              href="https://policies.google.com/technologies/ads"
+              target="_blank"
+              rel="noopener noreferrer"
+              >advertising policy</a
+            >.</p
+          >
+          <h2>External Links</h2>
+          <p
+            >Our service contains links to other websites (e.g., Ratsit, MrKoll,
+            Hitta.se). We are not responsible for the privacy policies or
+            content of these external websites. When you leave Hejda Data, we
+            encourage you to read the privacy policy of each website you
+            visit.</p
+          >
+          <h2>Contact</h2>
+          <p
+            >If you have questions about this policy or our service, please
+            contact us via the GitHub repository where the source code for this
+            project is openly available for review.</p
+          >
+        </div>
+      </div>
+
+      <!-- About -->
+      <div id="content-about">
+        <!-- Swedish Content -->
+        <div class="lang-sv">
+          <h1>Om Hejda Data</h1>
+          <div class="mission-box"
+            ><p class="mission-text"
+              >"Vår mission är att göra det enkelt för alla att ta kontroll över
+              sin personliga information på nätet, oavsett teknisk kunskap."</p
+            ></div
+          >
+          <h2>Varför finns vi?</h2>
+          <p
+            >I dagens digitala samhälle sprids personuppgifter snabbare än
+            någonsin. I Sverige är detta extra påtagligt på grund av
+            offentlighetsprincipen och de många privata aktörer som bygger
+            affärsmodeller på att publicera och sälja information om
+            privatpersoner.</p
+          >
+          <p
+            >Många människor känner sig obekväma med att deras adress,
+            telefonnummer, inkomst och vem de bor med ligger öppet för vem som
+            helst att se. Även om GDPR ger oss rättigheter, är processen att
+            utöva dem ofta krånglig och tidskrävande. Det ville vi ändra på.</p
+          >
+          <h2>Hur vi skyddar din integritet</h2>
+          <p
+            >Hejda Data är byggt med en grundläggande princip:
+            <strong>Vi vill inte ha din data.</strong></p
+          >
+          <p
+            >Därför har vi designat tjänsten så att den fungerar helt utan
+            backend-servrar eller databaser. När du använder Hejda Data stannar
+            all information i din egen webbläsare. Vi ser aldrig vad du skriver,
+            och vi sparar ingenting.</p
+          >
+          <h2>Vilka är vi?</h2>
+          <p
+            >Hejda Data är ett oberoende, ideellt initiativ. Vi är inte kopplade
+            till någon myndighet eller något av de företag vi listar. Projektet
+            är open source, vilket innebär att vem som helst kan granska koden
+            för att verifiera att vi håller vad vi lovar gällande säkerhet och
+            integritet.</p
+          >
+        </div>
+        <!-- English Content -->
+        <div class="lang-en" style="display: none">
+          <h1>About Hejda Data</h1>
+          <div class="mission-box"
+            ><p class="mission-text"
+              >"Our mission is to make it easy for everyone to take control of
+              their personal information online, regardless of technical
+              knowledge."</p
+            ></div
+          >
+          <h2>Why do we exist?</h2>
+          <p
+            >In today's digital society, personal data spreads faster than ever.
+            In Sweden, this is particularly evident due to the principle of
+            public access to official records and the many private actors who
+            build business models on publishing and selling information about
+            private individuals.</p
+          >
+          <p
+            >Many people feel uncomfortable that their address, phone number,
+            income, and who they live with are open for anyone to see. Although
+            GDPR gives us rights, the process of exercising them is often
+            complicated and time-consuming. We wanted to change that.</p
+          >
+          <h2>How we protect your privacy</h2>
+          <p
+            >Hejda Data is built with a fundamental principle:
+            <strong>We do not want your data.</strong></p
+          >
+          <p
+            >Therefore, we have designed the service to work entirely without
+            backend servers or databases. When you use Hejda Data, all
+            information stays in your own browser. We never see what you type,
+            and we save nothing.</p
+          >
+          <h2>Who are we?</h2>
+          <p
+            >Hejda Data is an independent, non-profit initiative. We are not
+            affiliated with any government agency or any of the companies we
+            list. The project is open source, which means anyone can review the
+            code to verify that we keep our promises regarding security and
+            privacy.</p
+          >
+        </div>
+      </div>
+    </div>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="script.js"></script>
   </body>
