@@ -52,10 +52,21 @@ const translations = {
         "För vissa tjänster kan du ta bort dina uppgifter direkt med BankID. För andra öppnar du e-postmeddelandet, granskar innehållet och skickar det från din e-postklient.",
       sendTo: "Skicka till",
     },
+    seo: {
+      title: "Varför ska du ta bort dina uppgifter?",
+      p1: "I Sverige är offentlighetsprincipen stark, vilket innebär att myndighetsdata ofta är tillgänglig för allmänheten. Detta utnyttjas av privata företag som Ratsit, MrKoll, Hitta.se och Eniro för att skapa sökbara databaser över hela befolkningen. För många kan detta kännas som ett intrång i privatlivet.",
+      p2: "Genom att använda <strong>Hejda Data</strong> kan du enkelt utöva din rätt enligt GDPR (Dataskyddsförordningen) att bli bortglömd eller begränsa hur dina uppgifter visas. Att manuellt kontakta varje tjänst är tidskrävande och krångligt. Vi har samlat direktlänkar till BankID-borttagning och skapat färdiga e-postmallar med korrekta juridiska hänvisningar för att maximera chansen att dina uppgifter tas bort snabbt och effektivt.",
+      p3: "Skydda din integritet, minska risken för ID-kapning och ta kontroll över ditt digitala fotavtryck idag. Tjänsten är helt gratis och vi sparar ingen information om dig.",
+    },
     footer: {
       rights: "© 2025 Hejda Data. Alla rättigheter förbehållna.",
       disclaimer:
         "Denna tjänst tillhandahålls som den är. Vi garanterar inte svar eller borttagning från valda tjänster.",
+      howItWorks: "Så fungerar det",
+      faq: "Vanliga frågor",
+      privacyPolicy: "Integritetspolicy",
+      about: "Om oss",
+      backToHome: "Tillbaka till startsidan",
     },
   },
   en: {
@@ -109,10 +120,21 @@ const translations = {
         "For some services you can remove your data directly with BankID. For others, click to open the email, review the content and send it from your email client.",
       sendTo: "Send to",
     },
+    seo: {
+      title: "Why should you remove your data?",
+      p1: "In Sweden, the principle of public access is strong, which means that government data is often available to the public. This is exploited by private companies like Ratsit, MrKoll, Hitta.se, and Eniro to create searchable databases of the entire population. For many, this can feel like an invasion of privacy.",
+      p2: "By using <strong>Hejda Data</strong>, you can easily exercise your right under GDPR (General Data Protection Regulation) to be forgotten or restrict how your data is displayed. Contacting each service manually is time-consuming and complicated. We have collected direct links for BankID removal and created ready-made email templates with correct legal references to maximize the chance that your data is removed quickly and effectively.",
+      p3: "Protect your privacy, reduce the risk of ID theft, and take control of your digital footprint today. The service is completely free and we save no information about you.",
+    },
     footer: {
       rights: "© 2025 Hejda Data. All rights reserved.",
       disclaimer:
         "This service is provided as-is. We do not guarantee responses or removal from selected services.",
+      howItWorks: "How it works",
+      faq: "FAQ",
+      privacyPolicy: "Privacy Policy",
+      about: "About Us",
+      backToHome: "Back to Home",
     },
   },
 };
@@ -270,7 +292,7 @@ ${name}`,
 };
 
 // State
-let currentLang = "sv";
+let currentLang = localStorage.getItem("language") || "sv";
 let userData = null; // Store user data in memory: { name, email, pin }
 let pendingAction = null; // Store pending action when modal is needed
 
@@ -295,6 +317,10 @@ const displayName = document.getElementById("displayName");
 const displayEmail = document.getElementById("displayEmail");
 const displayPIN = document.getElementById("displayPIN");
 
+// Info Modal Elements
+const infoModal = document.getElementById("infoModal");
+const infoModalBody = document.getElementById("infoModalBody");
+
 // Initialize
 function init() {
   renderCarousel();
@@ -305,7 +331,9 @@ function init() {
 
 // Setup event listeners
 function setupEventListeners() {
-  langSwitch.addEventListener("click", toggleLanguage);
+  if (langSwitch) {
+    langSwitch.addEventListener("click", toggleLanguage);
+  }
 
   // Landing page - scroll to main content via bouncing indicator
   if (scrollIndicator) {
@@ -315,20 +343,80 @@ function setupEventListeners() {
   }
 
   // Modal handling
-  cancelModal.addEventListener("click", closeModal);
-  saveUserInfo.addEventListener("click", handleSaveUserInfo);
-  editUserInfo.addEventListener("click", openModalForEdit);
+  if (cancelModal) cancelModal.addEventListener("click", closeModal);
+  if (saveUserInfo) saveUserInfo.addEventListener("click", handleSaveUserInfo);
+  if (editUserInfo) editUserInfo.addEventListener("click", openModalForEdit);
 
   // Close modal on outside click
-  userModal.addEventListener("click", (e) => {
-    if (e.target === userModal) {
-      closeModal();
-    }
-  });
+  if (userModal) {
+    userModal.addEventListener("click", (e) => {
+      if (e.target === userModal) {
+        closeModal();
+      }
+    });
+  }
+
+  // Close info modal on outside click
+  if (infoModal) {
+    infoModal.addEventListener("click", (e) => {
+      if (e.target === infoModal) {
+        closeInfoModal();
+      }
+    });
+  }
 
   // Form validation
-  userForm.addEventListener("input", validateForm);
+  if (userForm) {
+    userForm.addEventListener("input", validateForm);
+  }
+
+  // Scroll handling for header
+  window.addEventListener("scroll", handleScroll);
+  // Initial check
+  handleScroll();
 }
+
+// Scroll handling function
+function handleScroll() {
+  const header = document.querySelector(".landing-header");
+  const mainContainer = document.getElementById("mainContainer");
+
+  if (header && mainContainer) {
+    // Change style when the main container reaches the header
+    const triggerPoint = mainContainer.offsetTop - header.offsetHeight;
+
+    if (window.scrollY > triggerPoint) {
+      header.classList.add("scrolled");
+    } else {
+      header.classList.remove("scrolled");
+    }
+  }
+}
+
+// Info Modal Functions
+window.openInfoModal = function (pageId) {
+  const contentSource = document.getElementById(`content-${pageId}`);
+  if (contentSource && infoModalBody) {
+    infoModalBody.innerHTML = contentSource.innerHTML;
+    infoModal.classList.add("show");
+    document.body.style.overflow = "hidden";
+
+    // Update language visibility in the new content
+    updateLanguage();
+
+    // Re-initialize icons
+    if (typeof lucide !== "undefined") {
+      lucide.createIcons();
+    }
+  }
+};
+
+window.closeInfoModal = function () {
+  if (infoModal) {
+    infoModal.classList.remove("show");
+    document.body.style.overflow = "";
+  }
+};
 
 // Render carousel on landing page
 function renderCarousel() {
@@ -354,33 +442,6 @@ function renderCarousel() {
     `;
     })
     .join("");
-}
-
-// Setup event listeners
-function setupEventListeners() {
-  langSwitch.addEventListener("click", toggleLanguage);
-
-  // Landing page - scroll to main content via bouncing indicator
-  if (scrollIndicator) {
-    scrollIndicator.addEventListener("click", () => {
-      mainContainer.scrollIntoView({ behavior: "smooth" });
-    });
-  }
-
-  // Modal handling
-  cancelModal.addEventListener("click", closeModal);
-  saveUserInfo.addEventListener("click", handleSaveUserInfo);
-  editUserInfo.addEventListener("click", openModalForEdit);
-
-  // Close modal on outside click
-  userModal.addEventListener("click", (e) => {
-    if (e.target === userModal) {
-      closeModal();
-    }
-  });
-
-  // Form validation
-  userForm.addEventListener("input", validateForm);
 }
 
 // Modal functions
@@ -487,6 +548,7 @@ function validateForm() {
 
 // Generate provider links
 function generateProviderLinks() {
+  if (!emailLinks) return;
   const template = emailTemplates[currentLang];
 
   emailLinks.innerHTML = providers
@@ -615,6 +677,7 @@ function handleEmailAction(provider) {
 // Toggle language
 function toggleLanguage() {
   currentLang = currentLang === "sv" ? "en" : "sv";
+  localStorage.setItem("language", currentLang);
   updateLanguage();
 
   // Regenerate provider links with new language
@@ -627,10 +690,12 @@ function toggleLanguage() {
 // Update language
 function updateLanguage() {
   document.documentElement.lang = currentLang;
-  langSwitch.innerHTML =
-    currentLang === "sv"
-      ? '<i data-lucide="globe"></i> English'
-      : '<i data-lucide="globe"></i> Svenska';
+  if (langSwitch) {
+    langSwitch.innerHTML =
+      currentLang === "sv"
+        ? '<i data-lucide="globe"></i> English'
+        : '<i data-lucide="globe"></i> Svenska';
+  }
 
   // Update all translatable elements
   document.querySelectorAll("[data-i18n]").forEach((element) => {
@@ -639,7 +704,7 @@ function updateLanguage() {
     let value = translations[currentLang];
 
     for (const k of keys) {
-      value = value[k];
+      value = value && value[k];
     }
 
     if (value) {
@@ -647,12 +712,26 @@ function updateLanguage() {
     }
   });
 
+  // Toggle content blocks for static pages
+  document.querySelectorAll(".lang-sv").forEach((el) => {
+    el.style.display = currentLang === "sv" ? "block" : "none";
+  });
+  document.querySelectorAll(".lang-en").forEach((el) => {
+    el.style.display = currentLang === "en" ? "block" : "none";
+  });
+
   // Update placeholders
-  userName.placeholder =
-    currentLang === "sv" ? "Ex: Anna Andersson" : "Ex: Anna Andersson";
-  userEmail.placeholder =
-    currentLang === "sv" ? "Ex: anna@exempel.se" : "Ex: anna@example.com";
-  userPIN.placeholder = "Ex: YYYYMMDD-XXXX";
+  if (userName) {
+    userName.placeholder =
+      currentLang === "sv" ? "Ex: Anna Andersson" : "Ex: Anna Andersson";
+  }
+  if (userEmail) {
+    userEmail.placeholder =
+      currentLang === "sv" ? "Ex: anna@exempel.se" : "Ex: anna@example.com";
+  }
+  if (userPIN) {
+    userPIN.placeholder = "Ex: YYYYMMDD-XXXX";
+  }
 
   // Re-initialize Lucide icons
   if (typeof lucide !== "undefined") {
