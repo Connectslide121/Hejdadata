@@ -90,7 +90,7 @@ body {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  z-index: 1000;
+  z-index: 1100;
   pointer-events: none; /* Allow clicks to pass through empty space */
 }
 
@@ -967,6 +967,39 @@ body {
   width: 100%;
 }
 
+/* Hamburger Menu */
+.hamburger {
+  display: none;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  transition: all 0.2s;
+  margin-right: auto;
+}
+
+.hamburger svg {
+  width: 24px;
+  height: 24px;
+}
+
+.hamburger:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.landing-header.scrolled .hamburger {
+  background: white;
+  border-color: var(--border-color);
+  color: var(--text-dark);
+}
+
 /* Scrolled Header State */
 .landing-header.scrolled {
   background-color: rgba(255, 255, 255, 0.9);
@@ -1176,16 +1209,80 @@ body {
     margin-top: 0.5rem;
   }
 
+  /* Mobile Navigation */
+  .hamburger {
+    display: flex;
+    z-index: 1102;
+  }
+
   .main-nav {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 80%;
+    max-width: 300px;
+    height: 100vh;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 5rem 2rem 2rem;
+    gap: 0;
     margin-right: 0;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1rem;
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+    transition: left 0.3s ease;
+    z-index: 1101;
+  }
+
+  .main-nav.open {
+    left: 0;
+  }
+
+  .main-nav .nav-link {
+    color: white;
+    padding: 1rem 0;
+    font-size: 1.1rem;
+    width: 100%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .main-nav .nav-link::after {
+    display: none;
+  }
+
+  .main-nav .nav-link:hover {
+    color: var(--accent-color);
+  }
+
+  /* Mobile menu overlay */
+  .nav-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1099;
+  }
+
+  .nav-overlay.open {
+    display: block;
   }
 
   .language-toggle {
     position: static;
-    margin-bottom: 1rem;
+    margin-bottom: 0;
+  }
+
+  .landing-header {
+    padding: 1rem;
+  }
+
+  .landing-header.scrolled .hamburger {
+    background: white;
+    border-color: var(--border-color);
+    color: var(--text-dark);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
 }
 
