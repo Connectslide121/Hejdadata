@@ -321,6 +321,11 @@ const displayPIN = document.getElementById("displayPIN");
 const infoModal = document.getElementById("infoModal");
 const infoModalBody = document.getElementById("infoModalBody");
 
+// Mobile Menu Elements
+const hamburgerBtn = document.getElementById("hamburgerBtn");
+const mainNav = document.getElementById("mainNav");
+const navOverlay = document.getElementById("navOverlay");
+
 // Initialize
 function init() {
   renderCarousel();
@@ -334,6 +339,18 @@ function setupEventListeners() {
   if (langSwitch) {
     langSwitch.addEventListener("click", toggleLanguage);
   }
+
+  // Mobile menu handling
+  if (hamburgerBtn) {
+    hamburgerBtn.addEventListener("click", toggleMobileMenu);
+  }
+  if (navOverlay) {
+    navOverlay.addEventListener("click", closeMobileMenu);
+  }
+  // Close mobile menu when a nav link is clicked
+  document.querySelectorAll(".main-nav .nav-link").forEach((link) => {
+    link.addEventListener("click", closeMobileMenu);
+  });
 
   // Landing page - scroll to main content via bouncing indicator
   if (scrollIndicator) {
@@ -374,6 +391,42 @@ function setupEventListeners() {
   window.addEventListener("scroll", handleScroll);
   // Initial check
   handleScroll();
+}
+
+// Mobile menu functions
+function toggleMobileMenu() {
+  mainNav.classList.toggle("open");
+  navOverlay.classList.toggle("open");
+  document.body.style.overflow = mainNav.classList.contains("open")
+    ? "hidden"
+    : "";
+
+  // Toggle hamburger icon
+  const icon = hamburgerBtn.querySelector("i");
+  if (icon) {
+    icon.setAttribute(
+      "data-lucide",
+      mainNav.classList.contains("open") ? "x" : "menu"
+    );
+    if (typeof lucide !== "undefined") {
+      lucide.createIcons();
+    }
+  }
+}
+
+function closeMobileMenu() {
+  mainNav.classList.remove("open");
+  navOverlay.classList.remove("open");
+  document.body.style.overflow = "";
+
+  // Reset hamburger icon
+  const icon = hamburgerBtn.querySelector("i");
+  if (icon) {
+    icon.setAttribute("data-lucide", "menu");
+    if (typeof lucide !== "undefined") {
+      lucide.createIcons();
+    }
+  }
 }
 
 // Scroll handling function
