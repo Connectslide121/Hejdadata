@@ -157,6 +157,7 @@ const providers = [
     id: "ratsit",
     name: "Ratsit",
     email: "kundservice@ratsit.se",
+    logo: "assets/ratsit.jpg",
     removalMethod: "bankid",
     directLink: "https://www.ratsit.se/redigera/dolj",
     desc: {
@@ -168,6 +169,7 @@ const providers = [
     id: "hitta",
     name: "Hitta",
     email: "kundservice@hitta.se",
+    logo: "assets/hitta.jpg",
     removalMethod: "bankid",
     directLink: "https://www.hitta.se/kontakta-oss/ta-bort-kontaktsida",
     desc: {
@@ -179,6 +181,7 @@ const providers = [
     id: "eniro",
     name: "Eniro",
     email: "uppdatera.eniro@eniro.com",
+    logo: "assets/eniro.png",
     removalMethod: "bankid",
     directLink: "https://uppdatera.eniro.se/person",
     desc: {
@@ -190,6 +193,7 @@ const providers = [
     id: "merinfo",
     name: "Merinfo",
     email: "support@merinfo.se",
+    logo: "assets/merinfo.png",
     desc: {
       sv: "Personinformation och företagsuppgifter",
       en: "Personal and business information",
@@ -221,6 +225,7 @@ const providers = [
     id: "biluppgifter",
     name: "Biluppgifter",
     email: "info@biluppgifter.se",
+    logo: "assets/biluppgifter.jpg",
     desc: {
       sv: "Fordonsinformation och registeruppgifter",
       en: "Vehicle information and registry data",
@@ -230,6 +235,7 @@ const providers = [
     id: "lexbase",
     name: "Lexbase",
     email: "info@lexbase.se",
+    logo: "assets/lexbase.png",
     removalMethod: "webform",
     directLink: "https://www.lexbase.se/kontakta-oss",
     desc: {
@@ -483,7 +489,7 @@ function renderCarousel() {
     .map((provider) => {
       const domain = provider.email.split("@")[1];
       const initial = provider.name.charAt(0).toUpperCase();
-      const logoSrc = provider.logo || `https://logo.clearbit.com/${domain}`;
+      const logoSrc = provider.logo;
 
       return `
       <div class="carousel-logo" title="${provider.name}">
@@ -608,7 +614,7 @@ function generateProviderLinks() {
     .map((provider) => {
       const domain = provider.email.split("@")[1];
       const initial = provider.name.charAt(0).toUpperCase();
-      const logoSrc = provider.logo || `https://logo.clearbit.com/${domain}`;
+      const logoSrc = provider.logo;
 
       // Check if provider uses direct link or email
       if (provider.removalMethod === "bankid") {

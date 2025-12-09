@@ -37,10 +37,10 @@ These instructions guide AI coding agents working on this repo.
   - Validation is input-only; there is no submit event used for navigation, only button clicks.
 - **Email generation**:
   - `generateEmails()` reads `userName`, `userEmail`, `userPIN`, uses all `providers` (no user selection in UI) to build `mailto:` URLs with encoded `subject` and `body`.
-  - Each provider gets an item with logo (custom `assets/*.png` if defined, otherwise Clearbit logo based on domain) and a primary button that opens the mail client.
+  - Each provider gets an item with logo (custom `assets/*.png`) and a primary button that opens the mail client.
   - `onerror` handlers on `<img>` hide broken logos and show fallback initials.
 - **Privacy constraints**:
-  - No data is stored anywhere (no cookies/localStorage/sessionStorage, no network calls except logo images).
+  - No data is stored anywhere (no cookies/localStorage/sessionStorage, no network calls).
   - All logic must remain client-side and work when opened directly as a static file or via a simple HTTP server.
 
 ## Conventions for Changes
