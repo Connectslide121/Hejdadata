@@ -2,7 +2,7 @@
 
 A privacy-first web application that helps Swedish residents easily request removal of their personal information from public directory services according to GDPR.
 
-**Live Demo:** [https://connectslide121.github.io/Hejdadata/](https://connectslide121.github.io/Hejdadata/)
+**Visit site:** [https://hejdadata.se](https://hejdadata.se)
 
 ## Features
 
@@ -28,7 +28,7 @@ A privacy-first web application that helps Swedish residents easily request remo
 
 - **Frontend**: HTML5, CSS3, Vanilla JavaScript
 - **Icons**: [Lucide Icons](https://lucide.dev)
-- **Logos**: Clearbit Logo API + Custom assets
+- **Logos**: Custom assets
 - **Hosting**: GitHub Pages
 
 ## Privacy & Security
@@ -36,7 +36,7 @@ A privacy-first web application that helps Swedish residents easily request remo
 - **No Backend** - Entirely client-side application
 - **No Data Storage** - Nothing is saved to cookies, localStorage, or any database
 - **No Analytics** - No tracking or telemetry of any kind
-- **No External API Calls** - Except for logo fetching (Clearbit)
+- **No External API Calls** - All assets are local
 - **Open Source** - Full transparency, inspect the code yourself
 
 ## Supported Services
